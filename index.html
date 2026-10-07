@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@500;600;700;800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+html,body{margin:0;background:#161412;}
+html{scroll-behavior:smooth;}
+body{font-family:'Figtree',system-ui,sans-serif;color:#161412;-webkit-font-smoothing:antialiased;}
+*{box-sizing:border-box;}
+a{color:#EC6C2D;text-decoration:none;}
+a:hover{color:#F09048;}
+button{font-family:inherit;}
+::selection{background:#F09048;color:#161412;}
+input::placeholder{color:rgba(255,255,255,.4);}
+:focus-visible{outline:2px solid #EC6C2D;outline-offset:2px;}
+@keyframes kspin{to{transform:rotate(360deg)}}
+[data-noscroll]::-webkit-scrollbar{display:none}
+</style>
+</helmet>
+
+<header ref="{{ rootRef }}" style="position:fixed;top:0;left:0;right:0;z-index:50;height:70px;background:{{ hdrBg }};backdrop-filter:{{ hdrBlur }};-webkit-backdrop-filter:{{ hdrBlur }};border-bottom:1px solid {{ hdrBd }};transition:background .35s, border-color .35s">
+  <div style="max-width:1440px;height:70px;margin:0 auto;padding:0 clamp(20px,4.2vw,60px);display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <a href="#top" onClick="{{ goTop }}" style="display:flex"><img src="assets/kullyn-logo-clean.png" alt="Kullyn" style="height:28px;display:block"></a>
+    <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+      <nav style="display:flex;gap:clamp(18px,2.2vw,32px);align-items:center">
+        <a href="#que" data-nav="que" onClick="{{ goQue }}" style="position:relative;display:flex;justify-content:center;color:{{ hdrFg }};opacity:.7;font-size:14px;font-weight:500;white-space:nowrap;transition:opacity .2s, color .1s" style-hover="color:#F09048">Qué hacemos<span data-dot style="position:absolute;bottom:-12px;width:4px;height:4px;border-radius:50%;background:#EC6C2D;opacity:0;transition:opacity .2s"></span></a>
+        <a href="#como" data-nav="como" onClick="{{ goComo }}" style="position:relative;display:flex;justify-content:center;color:{{ hdrFg }};opacity:.7;font-size:14px;font-weight:500;white-space:nowrap;transition:opacity .2s, color .1s" style-hover="color:#F09048">Cómo funciona<span data-dot style="position:absolute;bottom:-12px;width:4px;height:4px;border-radius:50%;background:#EC6C2D;opacity:0;transition:opacity .2s"></span></a>
+        <a href="#porque" data-nav="porque" onClick="{{ goPorque }}" style="position:relative;display:flex;justify-content:center;color:{{ hdrFg }};opacity:.7;font-size:14px;font-weight:500;white-space:nowrap;transition:opacity .2s, color .1s" style-hover="color:#F09048">Por qué Kullyn<span data-dot style="position:absolute;bottom:-12px;width:4px;height:4px;border-radius:50%;background:#EC6C2D;opacity:0;transition:opacity .2s"></span></a>
+        <a href="#preguntas" data-nav="preguntas" onClick="{{ goFaq }}" style="position:relative;display:flex;justify-content:center;color:{{ hdrFg }};opacity:.7;font-size:14px;font-weight:500;white-space:nowrap;transition:opacity .2s, color .1s" style-hover="color:#F09048">Preguntas<span data-dot style="position:absolute;bottom:-12px;width:4px;height:4px;border-radius:50%;background:#EC6C2D;opacity:0;transition:opacity .2s"></span></a>
+        <a href="#contacto" data-nav="contacto" onClick="{{ goContacto }}" style="position:relative;display:flex;justify-content:center;color:{{ hdrFg }};opacity:.7;font-size:14px;font-weight:500;white-space:nowrap;transition:opacity .2s, color .1s" style-hover="color:#F09048">Contacto<span data-dot style="position:absolute;bottom:-12px;width:4px;height:4px;border-radius:50%;background:#EC6C2D;opacity:0;transition:opacity .2s"></span></a>
+      </nav>
+    </sc-if>
+    <div style="display:flex;gap:10px;align-items:center">
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+        <a href="#" data-btn style="position:relative;overflow:hidden;display:inline-flex;align-items:center;height:35px;padding:0 16px;border-radius:8px;background:{{ ingBg }};color:{{ ingFg }};transition:background .35s, color .35s;font-family:'Archivo',sans-serif;font-weight:600;font-size:14px"><span data-bg style="position:absolute;inset:0;background:{{ ingHv }};clip-path:inset(100% 0 0 0)"></span><span data-lbl style="position:relative;display:inline-flex">Ingresar</span></a>
+      </sc-if>
+      <a href="#" data-btn style="position:relative;overflow:hidden;display:inline-flex;align-items:center;height:35px;padding:0 16px;border-radius:8px;background:#EC6C2D;color:#161412;font-family:'Archivo',sans-serif;font-weight:600;font-size:14px"><span data-bg style="position:absolute;inset:0;background:#F09048;clip-path:inset(100% 0 0 0)"></span><span data-lbl style="position:relative;display:inline-flex">Regístrate</span></a>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ openMenu }}" aria-label="Abrir menú" style="width:40px;height:35px;border-radius:8px;border:1px solid {{ hdrBd2 }};background:transparent;color:{{ hdrFg }};display:grid;place-items:center;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><line x1="4" x2="20" y1="7" y2="7"></line><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="17" y2="17"></line></svg></button>
+      </sc-if>
+    </div>
+  </div>
+</header>
+
+<sc-if value="{{ menu }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:100;background:#161412;display:flex;flex-direction:column;padding:0 20px 32px;color:#fff">
+    <div style="height:70px;display:flex;align-items:center;justify-content:space-between">
+      <img src="assets/kullyn-logo-clean.png" alt="Kullyn" style="height:28px;display:block">
+      <button onClick="{{ closeMenu }}" aria-label="Cerrar menú" style="width:40px;height:35px;border-radius:8px;border:1px solid rgba(255,255,255,.16);background:transparent;color:#fff;display:grid;place-items:center;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:8px;margin-top:40px;font-family:'Archivo',sans-serif;font-weight:700;font-size:34px;letter-spacing:-.02em">
+      <a href="#que" onClick="{{ goQue }}" style="color:#fff;padding:8px 0">Qué hacemos</a>
+      <a href="#como" onClick="{{ goComo }}" style="color:#fff;padding:8px 0">Cómo funciona</a>
+      <a href="#porque" onClick="{{ goPorque }}" style="color:#fff;padding:8px 0">Por qué Kullyn</a>
+      <a href="#preguntas" onClick="{{ goFaq }}" style="color:#fff;padding:8px 0">Preguntas</a>
+      <a href="#contacto" onClick="{{ goContacto }}" style="color:#fff;padding:8px 0">Contacto</a>
+    </nav>
+    <div style="margin-top:auto;display:flex;gap:10px">
+      <a href="#" style="flex:1;height:48px;border-radius:8px;background:#fff;color:#161412;display:grid;place-items:center;font-family:'Archivo',sans-serif;font-weight:600">Ingresar</a>
+      <a href="#" style="flex:1;height:48px;border-radius:8px;background:#EC6C2D;color:#161412;display:grid;place-items:center;font-family:'Archivo',sans-serif;font-weight:600">Regístrate</a>
+    </div>
+  </div>
+</sc-if>
+
+<section id="top" data-screen-label="01 Hero" style="position:relative;overflow:hidden;background:#161412;color:#fff;min-height:100svh;padding-top:70px;display:flex;flex-direction:column">
+  <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(38% 46% at 0% 100%,rgba(196,74,22,.22),rgba(196,74,22,0) 100%),radial-gradient(30% 40% at 100% 0%,rgba(236,108,45,.14),rgba(236,108,45,0) 100%)"></div>
+  <div aria-hidden="true" data-grain style="position:absolute;inset:0;z-index:4;opacity:.04;pointer-events:none"></div>
+  <div style="position:relative;flex:1;display:flex;align-items:center;width:100%;max-width:1440px;margin:0 auto;padding:clamp(20px,3.5vh,40px) clamp(20px,4.2vw,60px)">
+    <div style="flex:1;min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:clamp(32px,4vw,64px)">
+
+      <div style="position:relative;z-index:2;flex:0 1 610px;min-width:0;order:{{ simOrder }};display:flex;justify-content:center;width:100%">
+        <div style="position:relative;width:100%;max-width:610px;padding:{{ simPad }}">
+
+          <div aria-hidden="true" style="position:absolute;left:50%;top:38%;width:0;height:0;z-index:1;pointer-events:none">
+            <div data-gbreathe data-gblur="70" style="position:absolute;left:0;top:0;width:820px;max-width:170vw;height:720px;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(255,160,90,1) 0%,rgba(240,124,52,.85) 30%,rgba(214,96,36,.45) 60%,rgba(196,74,22,0) 100%);filter:blur(70px);will-change:transform,opacity"></div>
+          </div>
+          <div data-hsim style="position:relative;z-index:2;width:100%;max-width:384px;margin:0 auto">
+            <div aria-hidden="true" style="position:absolute;inset:0;border-radius:58px;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);pointer-events:none"></div>
+            <div aria-hidden="true" style="position:absolute;inset:0;border-radius:58px;-webkit-backdrop-filter:blur(56px) saturate(1.2);backdrop-filter:blur(56px) saturate(1.2);-webkit-mask-image:linear-gradient(180deg,transparent 30%,#000 72%);mask-image:linear-gradient(180deg,transparent 30%,#000 72%);pointer-events:none"></div>
+            <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;-webkit-mask-image:linear-gradient(180deg,#000 40%,transparent 74%);mask-image:linear-gradient(180deg,#000 40%,transparent 74%)"><div style="position:absolute;inset:0;border-radius:58px;background:linear-gradient(160deg,rgba(70,64,60,.55) 0%,rgba(30,28,26,.6) 45%,rgba(18,17,16,.7) 100%);box-shadow:0 0 0 1px rgba(255,255,255,.12),inset 0 0 0 1.5px rgba(255,255,255,.08)"></div><div style="position:absolute;inset:9px;border-radius:49px;background:linear-gradient(180deg,rgba(255,255,255,.08) 0%,rgba(255,255,255,.08) 40%,rgba(255,255,255,.15) 100%);box-shadow:0 0 0 1px rgba(255,255,255,.08);"></div></div>
+            <div aria-hidden="true" style="position:absolute;inset:-60px;pointer-events:none;filter:blur(28px);-webkit-mask-image:linear-gradient(180deg,transparent calc(40% + 10px),#000 calc(72% + 10px));mask-image:linear-gradient(180deg,transparent calc(40% + 10px),#000 calc(72% + 10px))"><div style="position:absolute;inset:60px;border-radius:58px;background:linear-gradient(160deg,rgba(70,64,60,.55) 0%,rgba(30,28,26,.6) 45%,rgba(18,17,16,.7) 100%);box-shadow:0 0 0 1px rgba(255,255,255,.12),inset 0 0 0 1.5px rgba(255,255,255,.08)"></div><div style="position:absolute;inset:69px;border-radius:49px;background:linear-gradient(180deg,rgba(255,255,255,.08) 0%,rgba(255,255,255,.08) 40%,rgba(255,255,255,.15) 100%);box-shadow:0 0 0 1px rgba(255,255,255,.08);"></div></div>
+            <div style="position:relative;z-index:1;padding:9px">
+            <div style="position:relative;border-radius:49px;color:#fff;overflow:hidden;padding:0 18px 20px">
+            <div style="display:flex;align-items:center;justify-content:space-between;height:44px;padding:4px 16px 0;font-family:'Figtree',sans-serif;font-weight:600;font-size:12px;color:#fff">
+              <span>9:41</span>
+              <span style="display:flex;align-items:center;gap:4px"><svg width="13" height="9" viewBox="0 0 18 12" fill="#fff"><rect x="0" y="8" width="3" height="4" rx="1"></rect><rect x="5" y="5.5" width="3" height="6.5" rx="1"></rect><rect x="10" y="3" width="3" height="9" rx="1"></rect><rect x="15" y="0" width="3" height="12" rx="1"></rect></svg><svg width="12" height="9" viewBox="0 0 16 12" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M1.5 4.2a9.5 9.5 0 0 1 13 0"></path><path d="M4 7a6 6 0 0 1 8 0"></path><circle cx="8" cy="10" r="1.2" fill="#fff" stroke="none"></circle></svg><svg width="19" height="9" viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="3.5" fill="none" stroke="rgba(255,255,255,.5)"></rect><rect x="2.5" y="2.5" width="18" height="7" rx="2" fill="#fff"></rect><rect x="24" y="4" width="1.6" height="4" rx=".8" fill="rgba(255,255,255,.5)"></rect></svg></span>
+            </div>
+            <div style="display:flex;gap:14px;align-items:center">
+              <span style="width:44px;height:44px;border-radius:12px;background:#EC6C2D;color:#161412;display:grid;place-items:center;flex-shrink:0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"></rect><line x1="8" x2="16" y1="6" y2="6"></line><line x1="16" x2="16" y1="14" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg></span>
+              <div>
+                <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:17px;letter-spacing:-.01em">Simula tu financiamiento aquí</div>
+                <div style="font-size:14px;color:rgba(255,255,255,.62);margin-top:2px">Obtén una estimación en segundos</div>
+              </div>
+            </div>
+
+            <label style="display:block;font-size:13px;font-weight:600;color:rgba(255,255,255,.72);margin:16px 0 6px">Monto de la factura</label>
+            <div style="position:relative">
+              <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-family:'Archivo',sans-serif;font-weight:700;font-size:19px;color:rgba(255,255,255,.55)">$</span>
+              <input value="{{ amountStr }}" onInput="{{ onAmount }}" inputmode="numeric" aria-label="Monto de la factura" style="width:100%;height:48px;border-radius:12px;border:1px solid transparent;background:rgba(255,255,255,.07);padding:0 60px 0 34px;font-family:'Archivo',sans-serif;font-weight:700;font-size:19px;color:#fff;outline:none;transition:border-color .2s, background .2s" style-focus="border-color:#EC6C2D;background:rgba(255,255,255,.1)">
+              <span style="position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:13px;font-weight:600;color:rgba(255,255,255,.55)">CLP</span>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;margin:12px 0 6px;min-height:28px">
+              <label style="font-size:13px;font-weight:600;color:rgba(255,255,255,.72)">Plazo en días</label>
+              <sc-if value="{{ isOtro }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:rgba(255,255,255,.62)"><input value="{{ otroStr }}" onInput="{{ onOtro }}" inputmode="numeric" aria-label="Días" style="width:64px;height:28px;border-radius:8px;border:1px solid rgba(255,255,255,.18);padding:0 8px;font-family:'Archivo',sans-serif;font-weight:700;font-size:14px;text-align:right;outline:none;background:transparent;color:#fff" style-focus="border-color:#EC6C2D">días</div>
+              </sc-if>
+            </div>
+            <div style="position:relative;display:grid;grid-template-columns:repeat(4,1fr);background:rgba(255,255,255,.07);border-radius:20px;padding:4px">
+              <span style="position:absolute;top:4px;bottom:4px;left:{{ pillLeft }};width:calc((100% - 8px) / 4);border-radius:16px;background:#EC6C2D;transition:left .5s cubic-bezier(0.19,1,0.22,1)"></span>
+              <button onClick="{{ p0 }}" style="position:relative;height:40px;border:0;background:transparent;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:600;font-size:15px;color:{{ pc0 }};opacity:{{ o0 }};transition:opacity .2s">30</button>
+              <button onClick="{{ p1 }}" style="position:relative;height:40px;border:0;background:transparent;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:600;font-size:15px;color:{{ pc1 }};opacity:{{ o1 }};transition:opacity .2s">60</button>
+              <button onClick="{{ p2 }}" style="position:relative;height:40px;border:0;background:transparent;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:600;font-size:15px;color:{{ pc2 }};opacity:{{ o2 }};transition:opacity .2s">90</button>
+              <button onClick="{{ p3 }}" style="position:relative;height:40px;border:0;background:transparent;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:600;font-size:15px;color:{{ pc3 }};opacity:{{ o3 }};transition:opacity .2s">Otro</button>
+            </div>
+
+            <div style="margin-top:14px;background:rgba(255,255,255,.06);border-radius:16px;padding:14px 16px 10px">
+              <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between">
+                <div>
+                  <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.62)">Recibes hoy</div>
+                  <div style="font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(26px,2.4vw,32px);letter-spacing:-.025em;margin-top:4px;font-variant-numeric:tabular-nums">{{ hoyStr }}</div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.62)">Recibes a plazo</div>
+                  <div style="font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(20px,1.8vw,24px);letter-spacing:-.02em;margin-top:8px;color:rgba(255,255,255,.8);font-variant-numeric:tabular-nums">{{ plazoStr }}</div>
+                </div>
+              </div>
+              <svg viewBox="0 0 320 96" preserveAspectRatio="none" style="display:block;width:100%;height:52px;margin-top:8px;overflow:visible">
+                <defs><linearGradient id="kArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EC6C2D" stop-opacity=".45"></stop><stop offset="1" stop-color="#EC6C2D" stop-opacity="0"></stop></linearGradient></defs>
+                <path d="{{ chartArea }}" fill="url(#kArea)"></path>
+                <path d="{{ chartLine }}" fill="none" stroke="#EC6C2D" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+              </svg>
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,.55);margin-top:6px"><span>Hoy</span><span>{{ daysLbl }}</span></div>
+            </div>
+
+            <button onClick="{{ toggleRate }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;border:0;background:transparent;padding:12px 0 8px;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:600;font-size:15px;color:#fff">Conoce tu tasa exacta<span style="display:grid;transition:transform .35s cubic-bezier(0.215,0.61,0.355,1);transform:{{ rateRot }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg></span></button>
+            <div style="display:grid;grid-template-rows:{{ rateRows }};transition:grid-template-rows .45s cubic-bezier(0.215,0.61,0.355,1)">
+              <div style="overflow:hidden">
+                <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid rgba(255,255,255,.1);font-size:14px"><span style="color:rgba(255,255,255,.72)">Tasa referencial</span><span style="font-family:'Archivo',sans-serif;font-weight:700">{{ tasaStr }}</span></div>
+                <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid rgba(255,255,255,.1);font-size:14px"><span style="color:rgba(255,255,255,.72)">Costo estimado</span><span style="font-family:'Archivo',sans-serif;font-weight:700;font-variant-numeric:tabular-nums">{{ costoStr }}</span></div>
+              </div>
+            </div>
+            <p style="margin:2px 0 12px;font-size:12px;line-height:18px;color:rgba(255,255,255,.55)">Valores referenciales. La oferta final puede variar según evaluación.</p>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <a href="#" data-btn style="position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:10px;height:46px;padding:0 18px 0 20px;border-radius:999px;background:#fff;color:rgb(16,24,32);box-shadow:0 10px 36px rgba(0,0,0,.25);text-transform:uppercase;letter-spacing:.06em;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px"><span data-bg style="position:absolute;inset:0;background:#FDEFE6;clip-path:inset(100% 0 0 0)"></span><span data-lbl style="position:relative;display:inline-flex">Regístrate para ver tus ofertas</span><span style="position:relative;display:inline-flex;overflow:hidden;flex-shrink:0"><svg data-arw width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span></a>
+              <a href="#contacto" onClick="{{ goContacto }}" data-btn style="position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;height:46px;padding:0 22px;border-radius:999px;border:.67px solid rgba(255,255,255,.8);background:transparent;color:#fff;text-transform:uppercase;letter-spacing:.1em;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px"><span data-bg style="position:absolute;inset:0;background:rgba(255,255,255,.08);clip-path:inset(100% 0 0 0)"></span><span data-lbl style="position:relative;display:inline-flex">Hablar con un ejecutivo</span><span style="position:relative;display:inline-flex;overflow:hidden"><svg data-arw width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span></a>
+            </div>
+            </div>
+          </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div style="position:relative;z-index:1;flex:1 1 480px;min-width:0;order:{{ textOrder }};container-type:inline-size">
+        <div aria-hidden="true" style="position:absolute;left:58%;top:36%;width:0;height:0;z-index:-1;pointer-events:none">
+          <div data-gpar="26" style="position:absolute;left:0;top:0;will-change:transform">
+            <div data-gbreathe data-gblur="150" style="position:absolute;left:0;top:0;width:min(64vw,1000px);aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(236,108,45,.5) 0%,rgba(214,96,36,.32) 38%,rgba(196,74,22,.16) 64%,rgba(196,74,22,0) 100%);filter:blur(150px);will-change:transform,opacity"></div>
+            <div style="position:absolute;left:-75vw;top:-150px;width:150vw;height:150vw;border-radius:50%;border:1px solid rgba(255,255,255,.32);box-shadow:0 0 18px rgba(255,255,255,.14),inset 0 0 22px rgba(240,144,72,.12)"></div>
+            <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+              <div data-gfloat style="position:absolute;left:-40px;top:-190px;width:80px;height:80px;will-change:transform">
+                <div style="width:100%;height:100%;border-radius:50%;background:radial-gradient(circle,#FFE1C4 0%,#F7A060 26%,#EC6C2D 52%,rgba(236,108,45,0) 72%);box-shadow:0 0 70px 24px rgba(240,144,72,.42);filter:blur(6px)"></div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+        <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}"><div data-hs><img src="assets/kullyn-logo-clean.png" alt="Kullyn" style="height:clamp(30px,3vw,42px);display:block"></div></sc-if>
+        <h1 aria-label="Te bankamos." style="margin:clamp(20px,2.4vw,32px) 0 clamp(24px,2.4vw,32px);font-family:'Anton',sans-serif;font-weight:400;text-transform:uppercase;font-size:min(23cqw,168px);line-height:.86;letter-spacing:-.005em;color:#fff">
+          <span style="display:block;overflow:hidden;padding-top:.04em"><span data-hl style="display:block">Te</span></span>
+          <span style="display:block;overflow:hidden;padding-top:.04em"><span data-hl style="display:block">Bankamos.</span></span>
+        </h1>
+        <p data-hs style="margin:0;max-width:560px;font-size:18px;line-height:28px;color:rgba(255,255,255,.7);text-wrap:pretty">Ya vendiste, ya entregaste, ya facturaste. Mientras esperas que te paguen, liberamos tu dinero para que tu negocio siga andando.</p>
+        <div data-hs style="display:flex;flex-wrap:wrap;gap:12px;margin-top:32px">
+          <a href="#contacto" onClick="{{ goContacto }}" data-btn style="position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:10px;height:50px;padding:0 22px;border-radius:8px;background:#EC6C2D;color:#161412;font-family:'Archivo',sans-serif;font-weight:600;font-size:15px;width:{{ btnW }}"><span data-bg style="position:absolute;inset:0;background:#F09048;clip-path:inset(100% 0 0 0)"></span><span data-lbl style="position:relative;display:inline-flex">Quiero liberar mi dinero</span><span style="position:relative;display:inline-flex;overflow:hidden"><svg data-arw width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span></a>
+          <a href="#como" onClick="{{ goComo }}" data-btn style="position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;height:50px;padding:0 22px;border-radius:8px;background:#fff;color:#161412;font-family:'Archivo',sans-serif;font-weight:600;font-size:15px;width:{{ btnW }}"><span data-bg style="position:absolute;inset:0;background:#FDEFE6;clip-path:inset(100% 0 0 0)"></span><span data-lbl style="position:relative;display:inline-flex">Cómo funciona</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div data-hs style="position:relative;padding:0 0 clamp(24px,4vh,48px);overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)">
+    <div data-mtrack style="display:flex;width:max-content">
+      <div style="display:flex;gap:12px;padding-right:12px">
+        <div style="position:relative;overflow:hidden;display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Personas, no robots</div>
+        <div style="position:relative;overflow:hidden;display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Cuentas claras</div>
+        <div style="position:relative;overflow:hidden;display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Cuidamos a tu cliente</div>
+        <div style="position:relative;overflow:hidden;display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Jugamos en tu equipo</div>
+        <div style="position:relative;overflow:hidden;display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Cada minuto cuenta</div>
+      </div>
+      <div aria-hidden="true" style="display:flex;gap:12px;padding-right:12px">
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Personas, no robots</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Cuentas claras</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Cuidamos a tu cliente</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Jugamos en tu equipo</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Cada minuto cuenta</div>
+      </div>
+      <div aria-hidden="true" style="display:flex;gap:12px;padding-right:12px">
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Personas, no robots</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Cuentas claras</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Cuidamos a tu cliente</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Jugamos en tu equipo</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Cada minuto cuenta</div>
+      </div>
+      <div aria-hidden="true" style="display:flex;gap:12px;padding-right:12px">
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Personas, no robots</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Cuentas claras</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Cuidamos a tu cliente</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Jugamos en tu equipo</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Cada minuto cuenta</div>
+      </div>
+      <div aria-hidden="true" style="display:flex;gap:12px;padding-right:12px">
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Personas, no robots</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Cuentas claras</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Cuidamos a tu cliente</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Jugamos en tu equipo</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Cada minuto cuenta</div>
+      </div>
+      <div aria-hidden="true" style="display:flex;gap:12px;padding-right:12px">
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Personas, no robots</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Cuentas claras</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Cuidamos a tu cliente</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Jugamos en tu equipo</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5 6 12l7 7"></path><path d="M19 5l-7 7 7 7"></path></svg>Cada minuto cuenta</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<main style="position:relative;z-index:2;background:#fff;color:#161412;border-radius:24px;overflow:clip">
+
+  <section id="que" data-screen-label="03 Qué hacemos" style="position:relative;max-width:1440px;margin:0 auto;padding:clamp(88px,10vw,150px) clamp(20px,4.2vw,60px) clamp(80px,9vw,140px)">
+    <div aria-hidden="true" style="position:absolute;top:0;bottom:0;left:50%;width:100vw;margin-left:-50vw;overflow:hidden;pointer-events:none;-webkit-mask-image:linear-gradient(180deg,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(180deg,transparent,#000 14%,#000 86%,transparent)">
+      <div data-gpy style="position:absolute;left:50%;top:50%;width:0;height:0;will-change:transform">
+        <div data-genter style="position:absolute;left:calc(max(120vw,900px) / -2);top:calc(max(120vw,900px) / -2);width:max(120vw,900px);height:max(120vw,900px)">
+          <div style="width:100%;height:100%;transform:scaleY(.52)">
+            <div data-grot="52000" data-gblur="40" style="width:100%;height:100%;border-radius:50%;background:conic-gradient(from 0deg,rgba(236,108,45,.62),rgba(253,196,158,.18),rgba(240,144,72,.55),rgba(255,176,96,.14),rgba(236,108,45,.5),rgba(253,196,158,.2),rgba(236,108,45,.62));-webkit-mask-image:radial-gradient(closest-side,transparent 60%,#000 75%,#000 82%,transparent 98%);mask-image:radial-gradient(closest-side,transparent 60%,#000 75%,#000 82%,transparent 98%);filter:blur(40px);will-change:transform"></div>
+          </div>
+        </div>
+      </div>
+      <div data-grain="dark" style="position:absolute;inset:0;opacity:.04"></div>
+    </div>
+    <div style="position:relative;z-index:1;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:clamp(40px,6vw,96px);align-items:center">
+      <div>
+        <p data-r style="margin:0 0 24px;display:flex;width:fit-content;align-items:center;gap:8px;padding:6px 16px 6px 12px;border:.67px solid rgb(16,24,32);border-radius:20px;background:transparent;font-size:14px;font-weight:600;color:rgb(16,24,32)"><span style="width:6px;height:6px;border-radius:50%;background:#EC6C2D"></span>Qué hacemos</p>
+        <div data-r style="position:relative;display:inline-block;font-family:'Archivo',sans-serif;font-weight:700;font-size:clamp(24px,2.5vw,34px);letter-spacing:-.02em;color:rgba(22,20,18,.4)">No anticipamos tus facturas.<span data-r="line" style="position:absolute;left:-2px;right:-2px;top:52%;height:3px;border-radius:2px;background:rgba(22,20,18,.55);transform-origin:left center"></span></div>
+        <h2 data-r data-d="1000" style="margin:10px 0 40px;font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(46px,5.8vw,84px);line-height:1;letter-spacing:-.035em">Liberamos tu dinero.</h2>
+        <p data-words style="margin:0;max-width:640px;font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(22px,2.1vw,30px);line-height:1.38;letter-spacing:-.012em;text-wrap:pretty">Tu factura es el dinero que ya ganaste. Nosotros la financiamos para que tengas caja hoy y sigas operando. Porque en tu negocio, cada minuto cuenta.</p>
+      </div>
+      <div data-r data-glass style="background:rgba(255,255,255,.25);border-radius:20px;box-shadow:0 10px 36px 0 rgba(16,24,32,.06),0 0 0 1px rgba(230,236,242,.08);padding:clamp(32px,4vw,56px)">
+        <h3 style="margin:0 0 28px;font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(28px,2.6vw,36px);letter-spacing:-.025em">¿Te suena?</h3>
+        <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:20px">
+          <li style="display:flex;gap:16px;font-size:18px;line-height:28px;color:rgba(22,20,18,.8)"><span style="flex-shrink:0;width:11px;height:11px;margin-top:9px;border:1.75px solid #EC6C2D;transform:rotate(45deg)"></span>Facturaste hace 30, 60 o 90 días y el dinero no llega.</li>
+          <li style="display:flex;gap:16px;font-size:18px;line-height:28px;color:rgba(22,20,18,.8)"><span style="flex-shrink:0;width:11px;height:11px;margin-top:9px;border:1.75px solid #EC6C2D;transform:rotate(45deg)"></span>Los trabajadores y proveedores esperan su pago.</li>
+          <li style="display:flex;gap:16px;font-size:18px;line-height:28px;color:rgba(22,20,18,.8)"><span style="flex-shrink:0;width:11px;height:11px;margin-top:9px;border:1.75px solid #EC6C2D;transform:rotate(45deg)"></span>Justo se echó a perder la camioneta.</li>
+        </ul>
+        <p style="margin:32px 0 0;padding-top:24px;border-top:1px solid rgba(22,20,18,.1);font-family:'Archivo',sans-serif;font-weight:700;font-size:18px;line-height:28px">Si alguna vez te ha pasado, sabemos de qué hablas.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="como" data-screen-label="04 Cómo funciona" style="max-width:1440px;margin:0 auto;padding:clamp(40px,5vw,60px) clamp(20px,4.2vw,60px) 0">
+    <p data-r style="margin:0 0 20px;display:flex;width:fit-content;align-items:center;gap:8px;padding:6px 16px 6px 12px;border:.67px solid rgb(16,24,32);border-radius:20px;background:transparent;font-size:14px;font-weight:600;color:rgb(16,24,32)"><span style="width:6px;height:6px;border-radius:50%;background:#EC6C2D"></span>Cómo funciona</p>
+    <h2 data-r style="margin:0;max-width:760px;font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(36px,4vw,56px);line-height:1.04;letter-spacing:-.03em;text-wrap:balance">Simple no es lo mismo que sin revisar.</h2>
+
+    <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+      <div data-steps style="position:relative;height:360vh;margin-top:24px">
+        <div style="position:sticky;top:70px;height:calc(100vh - 70px);display:flex;flex-direction:column;padding:20px 0 48px">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;background:#fff">
+            <button onClick="{{ s0 }}" style="text-align:left;border:0;background:transparent;padding:14px 0 0;cursor:pointer"><span data-tab style="display:block;font-family:'Archivo',sans-serif;font-weight:600;font-size:16px;color:rgba(22,20,18,.5);transition:color .2s">Nos cuentas</span><span style="display:block;height:2px;margin-top:14px;background:rgba(22,20,18,.1);border-radius:2px;overflow:hidden"><span data-tabfill style="display:block;height:100%;width:0;background:#EC6C2D;transition:width .25s linear"></span></span></button>
+            <button onClick="{{ s1 }}" style="text-align:left;border:0;background:transparent;padding:14px 0 0;cursor:pointer"><span data-tab style="display:block;font-family:'Archivo',sans-serif;font-weight:600;font-size:16px;color:rgba(22,20,18,.5);transition:color .2s">Revisamos</span><span style="display:block;height:2px;margin-top:14px;background:rgba(22,20,18,.1);border-radius:2px;overflow:hidden"><span data-tabfill style="display:block;height:100%;width:0;background:#EC6C2D;transition:width .25s linear"></span></span></button>
+            <button onClick="{{ s2 }}" style="text-align:left;border:0;background:transparent;padding:14px 0 0;cursor:pointer"><span data-tab style="display:block;font-family:'Archivo',sans-serif;font-weight:600;font-size:16px;color:rgba(22,20,18,.5);transition:color .2s">Te proponemos</span><span style="display:block;height:2px;margin-top:14px;background:rgba(22,20,18,.1);border-radius:2px;overflow:hidden"><span data-tabfill style="display:block;height:100%;width:0;background:#EC6C2D;transition:width .25s linear"></span></span></button>
+            <button onClick="{{ s3 }}" style="text-align:left;border:0;background:transparent;padding:14px 0 0;cursor:pointer"><span data-tab style="display:block;font-family:'Archivo',sans-serif;font-weight:600;font-size:16px;color:rgba(22,20,18,.5);transition:color .2s">Liberamos tu dinero</span><span style="display:block;height:2px;margin-top:14px;background:rgba(22,20,18,.1);border-radius:2px;overflow:hidden"><span data-tabfill style="display:block;height:100%;width:0;background:#EC6C2D;transition:width .25s linear"></span></span></button>
+          </div>
+
+          <div style="flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(40px,5vw,80px);margin-top:32px">
+            <div style="position:relative">
+              <div aria-hidden="true" data-gdrift="0,0;40,-30;-30,20;0,0" data-gdur="24000" style="position:absolute;left:-12%;top:50%;width:120%;aspect-ratio:1;margin-top:-60%;pointer-events:none;will-change:transform"><div data-gpulse="8000" data-gblur="120" style="width:100%;height:100%;border-radius:50%;background:radial-gradient(closest-side,rgba(253,186,140,.45),rgba(253,196,158,.18) 55%,rgba(253,196,158,0));filter:blur(120px)"></div></div>
+              <div data-stxt style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center">
+                <span aria-hidden="true" style="position:absolute;left:-.04em;top:50%;transform:translateY(-58%);z-index:-1;font-family:'Anton',sans-serif;font-weight:400;font-size:clamp(220px,22vw,340px);line-height:1;letter-spacing:-.02em;background:linear-gradient(180deg,rgba(236,108,45,.2) 0%,rgba(236,108,45,.06) 55%,rgba(236,108,45,0) 85%);-webkit-background-clip:text;background-clip:text;color:transparent;pointer-events:none;user-select:none">01</span>
+                <span style="width:48px;height:48px;border-radius:50%;background:#EC6C2D;color:#fff;display:grid;place-items:center;font-family:'Archivo',sans-serif;font-weight:800;font-size:20px">1</span>
+                <h3 style="margin:28px 0 14px;font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(30px,2.8vw,40px);letter-spacing:-.03em">Nos cuentas</h3>
+                <p style="margin:0;max-width:440px;font-size:18px;line-height:28px;color:rgba(22,20,18,.7)">Qué facturas tienes, a quién le facturaste y por cuánto.</p>
+              </div>
+              <div data-stxt style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center">
+                <span aria-hidden="true" style="position:absolute;left:-.04em;top:50%;transform:translateY(-58%);z-index:-1;font-family:'Anton',sans-serif;font-weight:400;font-size:clamp(220px,22vw,340px);line-height:1;letter-spacing:-.02em;background:linear-gradient(180deg,rgba(236,108,45,.2) 0%,rgba(236,108,45,.06) 55%,rgba(236,108,45,0) 85%);-webkit-background-clip:text;background-clip:text;color:transparent;pointer-events:none;user-select:none">02</span>
+                <span style="width:48px;height:48px;border-radius:50%;background:#EC6C2D;color:#fff;display:grid;place-items:center;font-family:'Archivo',sans-serif;font-weight:800;font-size:20px">2</span>
+                <h3 style="margin:28px 0 14px;font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(30px,2.8vw,40px);letter-spacing:-.03em">Revisamos</h3>
+                <p style="margin:0;max-width:440px;font-size:18px;line-height:28px;color:rgba(22,20,18,.7)">Tu empresa, la factura y a tu cliente. Lo hacen personas.</p>
+              </div>
+              <div data-stxt style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center">
+                <span aria-hidden="true" style="position:absolute;left:-.04em;top:50%;transform:translateY(-58%);z-index:-1;font-family:'Anton',sans-serif;font-weight:400;font-size:clamp(220px,22vw,340px);line-height:1;letter-spacing:-.02em;background:linear-gradient(180deg,rgba(236,108,45,.2) 0%,rgba(236,108,45,.06) 55%,rgba(236,108,45,0) 85%);-webkit-background-clip:text;background-clip:text;color:transparent;pointer-events:none;user-select:none">03</span>
+                <span style="width:48px;height:48px;border-radius:50%;background:#EC6C2D;color:#fff;display:grid;place-items:center;font-family:'Archivo',sans-serif;font-weight:800;font-size:20px">3</span>
+                <h3 style="margin:28px 0 14px;font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(30px,2.8vw,40px);letter-spacing:-.03em">Te proponemos</h3>
+                <p style="margin:0;max-width:440px;font-size:18px;line-height:28px;color:rgba(22,20,18,.7)">Cuánto recibes, cuánto cuesta y cuándo. Antes de firmar.</p>
+              </div>
+              <div data-stxt style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center">
+                <span aria-hidden="true" style="position:absolute;left:-.04em;top:50%;transform:translateY(-58%);z-index:-1;font-family:'Anton',sans-serif;font-weight:400;font-size:clamp(220px,22vw,340px);line-height:1;letter-spacing:-.02em;background:linear-gradient(180deg,rgba(236,108,45,.2) 0%,rgba(236,108,45,.06) 55%,rgba(236,108,45,0) 85%);-webkit-background-clip:text;background-clip:text;color:transparent;pointer-events:none;user-select:none">04</span>
+                <span style="width:48px;height:48px;border-radius:50%;background:#EC6C2D;color:#fff;display:grid;place-items:center;font-family:'Archivo',sans-serif;font-weight:800;font-size:20px">4</span>
+                <h3 style="margin:28px 0 14px;font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(30px,2.8vw,40px);letter-spacing:-.03em">Liberamos tu dinero</h3>
+                <p style="margin:0;max-width:440px;font-size:18px;line-height:28px;color:rgba(22,20,18,.7)">Una vez aprobada la operación, te depositamos.</p>
+              </div>
+            </div>
+
+            <div style="position:relative;min-height:420px">
+              <div data-smock style="position:absolute;inset:0;border-radius:20px;overflow:hidden;background:radial-gradient(60% 55% at 15% 88%,rgba(236,108,45,.5),rgba(236,108,45,0) 70%),radial-gradient(50% 50% at 90% 10%,rgba(255,168,84,.32),rgba(255,168,84,0) 70%),radial-gradient(70% 60% at 60% 60%,rgba(196,74,22,.28),rgba(196,74,22,0) 75%),#161412;display:grid;place-items:center">
+                <div data-gdrift="0,0;60,-40;-40,30;0,0" data-gdur="20000" style="position:absolute;left:32%;top:62%;width:70%;aspect-ratio:1;margin:-35% 0 0 -35%;pointer-events:none;will-change:transform"><div data-gpulse="7000" data-gblur="80" style="width:100%;height:100%;border-radius:50%;background:radial-gradient(closest-side,rgba(240,144,72,.55),rgba(214,96,36,.25) 55%,rgba(214,96,36,0));filter:blur(80px)"></div></div>
+                <div data-grain style="position:absolute;inset:0;opacity:.1;pointer-events:none"></div>
+                <div style="position:relative;width:min(420px,82%);background:rgba(255,255,255,.1);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-radius:20px;box-shadow:0 10px 36px 0 rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.08);color:#fff;padding:22px">
+                  <div data-mi style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span style="font-family:'Archivo',sans-serif;font-weight:700;font-size:16px">Tus facturas</span><span style="padding:3px 8px;border-radius:4px;background:rgba(236,108,45,.2);color:#FFB98A;font-size:12px;font-weight:600">3 seleccionadas</span></div>
+                  <div data-mi style="display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid rgba(255,255,255,.1)"><span style="width:20px;height:20px;border-radius:6px;background:#EC6C2D;display:grid;place-items:center;flex-shrink:0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#161412" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">Constructora Los Andes SpA</div><div style="font-size:12px;color:rgba(255,255,255,.55)">Factura N° 004821</div></div><span style="font-family:'Archivo',sans-serif;font-weight:700;font-size:15px">$4.250.000</span></div>
+                  <div data-mi style="display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid rgba(255,255,255,.1)"><span style="width:20px;height:20px;border-radius:6px;background:#EC6C2D;display:grid;place-items:center;flex-shrink:0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#161412" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">Distribuidora Maule Ltda.</div><div style="font-size:12px;color:rgba(255,255,255,.55)">Factura N° 004822</div></div><span style="font-family:'Archivo',sans-serif;font-weight:700;font-size:15px">$2.180.000</span></div>
+                  <div data-mi style="display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid rgba(255,255,255,.1)"><span style="width:20px;height:20px;border-radius:6px;background:#EC6C2D;display:grid;place-items:center;flex-shrink:0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#161412" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">Agrícola San Pedro SpA</div><div style="font-size:12px;color:rgba(255,255,255,.55)">Factura N° 004830</div></div><span style="font-family:'Archivo',sans-serif;font-weight:700;font-size:15px">$3.570.000</span></div>
+                  <div data-mi style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;padding:14px 16px;border-radius:12px;background:rgba(255,255,255,.06)"><span style="font-size:13px;font-weight:600;color:rgba(255,255,255,.62)">Total facturado</span><span style="font-family:'Archivo',sans-serif;font-weight:800;font-size:18px">$10.000.000</span></div>
+                </div>
+                <div data-float="6 0.6 10" style="position:absolute;right:7%;top:12%">
+                  <div data-mi style="display:flex;align-items:center;gap:8px;padding:9px 13px;border-radius:20px;background:#EC6C2D;color:#161412;font-family:'Archivo',sans-serif;font-weight:700;font-size:13px;box-shadow:0 10px 36px rgba(0,0,0,.25)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>Factura agregada</div>
+                </div>
+              </div>
+
+              <div data-smock style="position:absolute;inset:0;border-radius:20px;overflow:hidden;background:radial-gradient(60% 55% at 15% 88%,rgba(236,108,45,.5),rgba(236,108,45,0) 70%),radial-gradient(50% 50% at 90% 10%,rgba(255,168,84,.32),rgba(255,168,84,0) 70%),radial-gradient(70% 60% at 60% 60%,rgba(196,74,22,.28),rgba(196,74,22,0) 75%),#161412;display:grid;place-items:center">
+                <div data-gdrift="0,0;60,-40;-40,30;0,0" data-gdur="20000" style="position:absolute;left:32%;top:62%;width:70%;aspect-ratio:1;margin:-35% 0 0 -35%;pointer-events:none;will-change:transform"><div data-gpulse="7000" data-gblur="80" style="width:100%;height:100%;border-radius:50%;background:radial-gradient(closest-side,rgba(240,144,72,.55),rgba(214,96,36,.25) 55%,rgba(214,96,36,0));filter:blur(80px)"></div></div>
+                <div data-grain style="position:absolute;inset:0;opacity:.1;pointer-events:none"></div>
+                <div style="position:relative;width:min(420px,82%);background:rgba(255,255,255,.1);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-radius:20px;box-shadow:0 10px 36px 0 rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.08);color:#fff;padding:22px">
+                  <div data-mi style="margin-bottom:14px"><div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:16px">Revisión de la operación</div><div style="font-size:12px;color:rgba(255,255,255,.55);margin-top:2px">La hace una persona del equipo</div></div>
+                  <div data-mi style="display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid rgba(255,255,255,.1)"><span style="width:28px;height:28px;border-radius:50%;background:rgba(236,108,45,.2);color:#F09048;display:grid;place-items:center;flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span><span style="flex:1;font-size:15px;font-weight:600">Tu empresa</span><span style="padding:3px 8px;border-radius:4px;background:rgba(236,108,45,.2);color:#FFB98A;font-size:12px;font-weight:600">Revisado</span></div>
+                  <div data-mi style="display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid rgba(255,255,255,.1)"><span style="width:28px;height:28px;border-radius:50%;background:rgba(236,108,45,.2);color:#F09048;display:grid;place-items:center;flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span><span style="flex:1;font-size:15px;font-weight:600">La factura</span><span style="padding:3px 8px;border-radius:4px;background:rgba(236,108,45,.2);color:#FFB98A;font-size:12px;font-weight:600">Revisado</span></div>
+                  <div data-mi style="display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid rgba(255,255,255,.1)"><span style="width:28px;height:28px;border-radius:50%;border:1.5px dashed rgba(255,255,255,.35);flex-shrink:0"></span><span style="flex:1;font-size:15px;font-weight:600">Tu cliente</span><span style="display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:4px;background:#7A2F0E;color:#FFD9C2;font-size:12px;font-weight:600"><span style="width:5px;height:5px;border-radius:50%;background:#F09048"></span>En revisión</span></div>
+                </div>
+                <div data-float="6 1.4 10" style="position:absolute;left:7%;bottom:12%">
+                  <div data-mi style="position:relative;overflow:hidden;padding:12px 14px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-size:13px;font-weight:600;box-shadow:0 10px 36px rgba(0,0,0,.25);display:flex;gap:8px;align-items:center"><span style="width:8px;height:8px;border-radius:50%;background:#EC6C2D"></span>Revisado por personas</div>
+                </div>
+                <sc-if value="{{ showCursors }}" hint-placeholder-val="{{ true }}">
+                  <div data-cursor=".74,.44;.7,.56;.74,.68;.84,.3" style="position:absolute;left:0;top:0;z-index:6;pointer-events:none">
+                    <div style="position:relative">
+                      <span data-ripple style="position:absolute;left:-10px;top:-10px;width:24px;height:24px;border-radius:50%;border:1.5px solid #EC6C2D;opacity:0"></span>
+                      <svg data-carrow width="20" height="22" viewBox="0 0 20 22" style="display:block;transform-origin:2px 2px"><path d="M2 1.5 L2 18 L6.6 13.8 L9.6 20.4 L12.4 19.2 L9.5 12.7 L15.8 12.7 Z" fill="#161412" stroke="#fff" stroke-width="1.2" stroke-linejoin="round"></path></svg>
+                      <div style="position:absolute;left:16px;top:18px;display:flex;align-items:center;gap:6px;padding:4px 10px 4px 4px;border-radius:999px;background:#161412;border:1px solid rgba(255,255,255,.12);color:#EC6C2D;font-size:12px;font-weight:600;white-space:nowrap;box-shadow:0 10px 36px rgba(0,0,0,.25)"><span style="width:18px;height:18px;border-radius:50%;background:#EC6C2D;color:#161412;display:grid;place-items:center;font-size:9px;font-weight:700">AK</span>Analista Kullyn</div>
+                    </div>
+                  </div>
+                </sc-if>
+              </div>
+
+              <div data-smock style="position:absolute;inset:0;border-radius:20px;overflow:hidden;background:radial-gradient(60% 55% at 15% 88%,rgba(236,108,45,.5),rgba(236,108,45,0) 70%),radial-gradient(50% 50% at 90% 10%,rgba(255,168,84,.32),rgba(255,168,84,0) 70%),radial-gradient(70% 60% at 60% 60%,rgba(196,74,22,.28),rgba(196,74,22,0) 75%),#161412;display:grid;place-items:center">
+                <div data-gdrift="0,0;60,-40;-40,30;0,0" data-gdur="20000" style="position:absolute;left:32%;top:62%;width:70%;aspect-ratio:1;margin:-35% 0 0 -35%;pointer-events:none;will-change:transform"><div data-gpulse="7000" data-gblur="80" style="width:100%;height:100%;border-radius:50%;background:radial-gradient(closest-side,rgba(240,144,72,.55),rgba(214,96,36,.25) 55%,rgba(214,96,36,0));filter:blur(80px)"></div></div>
+                <div data-grain style="position:absolute;inset:0;opacity:.1;pointer-events:none"></div>
+                <div style="position:relative;width:min(400px,80%);background:rgba(255,255,255,.1);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-radius:20px;box-shadow:0 10px 36px 0 rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.08);color:#fff;padding:24px">
+                  <div data-mi style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:'Archivo',sans-serif;font-weight:700;font-size:16px">Tu propuesta</span><span style="font-size:12px;color:rgba(255,255,255,.55)">N° 1042</span></div>
+                  <div data-mi style="margin-top:20px"><div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.62)">Recibes</div><div style="font-family:'Archivo',sans-serif;font-weight:800;font-size:40px;letter-spacing:-.03em;color:#EC6C2D;margin-top:2px">$9.226.868</div></div>
+                  <div data-mi style="display:flex;justify-content:space-between;padding:14px 0;margin-top:12px;border-top:1px solid rgba(255,255,255,.1);font-size:14px"><span style="color:rgba(255,255,255,.72)">Costo</span><span style="font-family:'Archivo',sans-serif;font-weight:700">$273.132</span></div>
+                  <div data-mi style="display:flex;justify-content:space-between;padding:14px 0;border-top:1px solid rgba(255,255,255,.1);font-size:14px"><span style="color:rgba(255,255,255,.72)">Fecha de depósito</span><span style="font-family:'Archivo',sans-serif;font-weight:700">15 oct 2026</span></div>
+                  <div data-mi style="display:flex;gap:8px;margin-top:10px"><span style="flex:1;height:44px;border-radius:20px;background:#EC6C2D;color:#161412;display:grid;place-items:center;font-family:'Archivo',sans-serif;font-weight:600;font-size:14px">Aceptar propuesta</span><span style="height:44px;padding:0 16px;border-radius:20px;border:.67px solid rgba(255,255,255,.7);background:transparent;display:grid;place-items:center;font-family:'Archivo',sans-serif;font-weight:600;font-size:14px">Ver detalle</span></div>
+                </div>
+                <div data-float="7 0.3 12" style="position:absolute;left:6%;top:12%">
+                  <div data-mi style="position:relative;overflow:hidden;padding:12px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;box-shadow:0 10px 36px rgba(0,0,0,.25)"><div style="font-size:11px;color:rgba(255,255,255,.5)">Tasa mensual</div><div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:18px;margin-top:2px">0,99%</div></div>
+                </div>
+                <div data-float="6 2 16" style="position:absolute;right:6%;bottom:14%">
+                  <div data-mi style="display:flex;align-items:center;gap:8px;padding:9px 13px;border-radius:20px;background:#EC6C2D;color:#161412;font-family:'Archivo',sans-serif;font-weight:700;font-size:13px;box-shadow:0 10px 36px rgba(0,0,0,.25)">Antes de firmar</div>
+                </div>
+              </div>
+
+              <div data-smock style="position:absolute;inset:0;border-radius:20px;overflow:hidden;background:radial-gradient(60% 55% at 15% 88%,rgba(236,108,45,.5),rgba(236,108,45,0) 70%),radial-gradient(50% 50% at 90% 10%,rgba(255,168,84,.32),rgba(255,168,84,0) 70%),radial-gradient(70% 60% at 60% 60%,rgba(196,74,22,.28),rgba(196,74,22,0) 75%),#161412;display:grid;place-items:center">
+                <div data-gdrift="0,0;60,-40;-40,30;0,0" data-gdur="20000" style="position:absolute;left:32%;top:62%;width:70%;aspect-ratio:1;margin:-35% 0 0 -35%;pointer-events:none;will-change:transform"><div data-gpulse="7000" data-gblur="80" style="width:100%;height:100%;border-radius:50%;background:radial-gradient(closest-side,rgba(240,144,72,.55),rgba(214,96,36,.25) 55%,rgba(214,96,36,0));filter:blur(80px)"></div></div>
+                <div data-grain style="position:absolute;inset:0;opacity:.1;pointer-events:none"></div>
+                <div style="position:relative;width:min(380px,78%);background:rgba(255,255,255,.1);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-radius:20px;box-shadow:0 10px 36px 0 rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.08);color:#fff;padding:28px 24px;text-align:center">
+                  <div data-mi style="width:56px;height:56px;margin:0 auto;border-radius:50%;background:#EC6C2D;display:grid;place-items:center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#161412" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></div>
+                  <div data-mi style="font-family:'Archivo',sans-serif;font-weight:800;font-size:24px;letter-spacing:-.02em;margin-top:18px">Depósito realizado</div>
+                  <div data-mi style="font-family:'Archivo',sans-serif;font-weight:800;font-size:34px;letter-spacing:-.03em;color:#EC6C2D;margin-top:6px">$9.226.868</div>
+                  <div data-mi style="font-size:13px;color:rgba(255,255,255,.6);margin-top:6px">Cuenta corriente ···· 4821</div>
+                  <div data-mi style="display:inline-flex;align-items:center;gap:6px;margin-top:18px;padding:5px 10px;border-radius:4px;background:#EC6C2D;color:#161412;font-size:12px;font-weight:700"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>Operación aprobada</div>
+                </div>
+                <div data-float="7 1 12" style="position:absolute;right:6%;top:12%">
+                  <div data-mi style="position:relative;overflow:hidden;width:170px;padding:12px 14px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;box-shadow:0 10px 36px rgba(0,0,0,.25)"><div style="font-size:11px;color:rgba(255,255,255,.5)">Tu caja</div><svg viewBox="0 0 140 44" style="display:block;width:100%;height:44px;margin-top:6px"><path d="M0 40 C 30 40, 40 38, 60 34 C 80 30, 88 8, 104 6 L 140 4 L 140 44 L 0 44 Z" fill="rgba(236,108,45,.3)"></path><path d="M0 40 C 30 40, 40 38, 60 34 C 80 30, 88 8, 104 6 L 140 4" fill="none" stroke="#EC6C2D" stroke-width="2"></path></svg></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+      <div data-r>
+        <div ref="{{ csRef }}" onScroll="{{ onCarousel }}" data-noscroll style="display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:clamp(20px,4.2vw,60px);margin:40px calc(-1 * clamp(20px,4.2vw,60px)) 0;padding:0 clamp(20px,4.2vw,60px) 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain">
+        <div style="flex:0 0 min(84%,420px);scroll-snap-align:start;display:flex;flex-direction:column">
+          <span style="width:44px;height:44px;border-radius:50%;background:#EC6C2D;color:#fff;display:grid;place-items:center;font-family:'Archivo',sans-serif;font-weight:800;font-size:18px">1</span>
+          <h3 style="margin:18px 0 8px;font-family:'Archivo',sans-serif;font-weight:800;font-size:26px;letter-spacing:-.025em">Nos cuentas</h3>
+          <p style="margin:0;font-size:16px;line-height:26px;color:rgba(22,20,18,.7)">Qué facturas tienes, a quién le facturaste y por cuánto.</p>
+          <div style="position:relative;overflow:hidden;margin-top:20px;flex:1;min-height:190px;display:flex;flex-direction:column;justify-content:center;padding:24px 18px;border-radius:20px;background:radial-gradient(60% 55% at 15% 88%,rgba(236,108,45,.5),rgba(236,108,45,0) 70%),radial-gradient(50% 50% at 90% 10%,rgba(255,168,84,.32),rgba(255,168,84,0) 70%),radial-gradient(70% 60% at 60% 60%,rgba(196,74,22,.28),rgba(196,74,22,0) 75%),#161412"><div data-grain style="position:absolute;inset:0;opacity:.1"></div><div style="position:relative;background:rgba(255,255,255,.1);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-radius:20px;box-shadow:0 10px 36px 0 rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.08);color:#fff;padding:16px"><div style="display:flex;justify-content:space-between;padding:8px 0;font-size:14px"><span style="font-weight:600">Constructora Los Andes SpA</span><span style="font-family:'Archivo',sans-serif;font-weight:700">$4.250.000</span></div><div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid rgba(255,255,255,.1);font-size:14px"><span style="font-weight:600">Distribuidora Maule Ltda.</span><span style="font-family:'Archivo',sans-serif;font-weight:700">$2.180.000</span></div></div></div>
+        </div>
+        <div style="flex:0 0 min(84%,420px);scroll-snap-align:start;display:flex;flex-direction:column">
+          <span style="width:44px;height:44px;border-radius:50%;background:#EC6C2D;color:#fff;display:grid;place-items:center;font-family:'Archivo',sans-serif;font-weight:800;font-size:18px">2</span>
+          <h3 style="margin:18px 0 8px;font-family:'Archivo',sans-serif;font-weight:800;font-size:26px;letter-spacing:-.025em">Revisamos</h3>
+          <p style="margin:0;font-size:16px;line-height:26px;color:rgba(22,20,18,.7)">Tu empresa, la factura y a tu cliente. Lo hacen personas.</p>
+          <div style="position:relative;overflow:hidden;margin-top:20px;flex:1;min-height:190px;display:flex;flex-direction:column;justify-content:center;padding:24px 18px;border-radius:20px;background:radial-gradient(60% 55% at 15% 88%,rgba(236,108,45,.5),rgba(236,108,45,0) 70%),radial-gradient(50% 50% at 90% 10%,rgba(255,168,84,.32),rgba(255,168,84,0) 70%),radial-gradient(70% 60% at 60% 60%,rgba(196,74,22,.28),rgba(196,74,22,0) 75%),#161412"><div data-grain style="position:absolute;inset:0;opacity:.1"></div><div style="position:relative;background:rgba(255,255,255,.1);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-radius:20px;box-shadow:0 10px 36px 0 rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.08);color:#fff;padding:16px"><div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-size:14px;font-weight:600">Tu empresa<span style="padding:3px 8px;border-radius:4px;background:rgba(236,108,45,.2);color:#FFB98A;font-size:12px">Revisado</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid rgba(255,255,255,.1);font-size:14px;font-weight:600">Tu cliente<span style="padding:3px 8px;border-radius:4px;background:#7A2F0E;color:#FFD9C2;font-size:12px">En revisión</span></div></div></div>
+        </div>
+        <div style="flex:0 0 min(84%,420px);scroll-snap-align:start;display:flex;flex-direction:column">
+          <span style="width:44px;height:44px;border-radius:50%;background:#EC6C2D;color:#fff;display:grid;place-items:center;font-family:'Archivo',sans-serif;font-weight:800;font-size:18px">3</span>
+          <h3 style="margin:18px 0 8px;font-family:'Archivo',sans-serif;font-weight:800;font-size:26px;letter-spacing:-.025em">Te proponemos</h3>
+          <p style="margin:0;font-size:16px;line-height:26px;color:rgba(22,20,18,.7)">Cuánto recibes, cuánto cuesta y cuándo. Antes de firmar.</p>
+          <div style="position:relative;overflow:hidden;margin-top:20px;flex:1;min-height:190px;display:flex;flex-direction:column;justify-content:center;padding:24px 18px;border-radius:20px;background:radial-gradient(60% 55% at 15% 88%,rgba(236,108,45,.5),rgba(236,108,45,0) 70%),radial-gradient(50% 50% at 90% 10%,rgba(255,168,84,.32),rgba(255,168,84,0) 70%),radial-gradient(70% 60% at 60% 60%,rgba(196,74,22,.28),rgba(196,74,22,0) 75%),#161412"><div data-grain style="position:absolute;inset:0;opacity:.1"></div><div style="position:relative;background:rgba(255,255,255,.1);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-radius:20px;box-shadow:0 10px 36px 0 rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.08);color:#fff;padding:16px"><div style="font-size:12px;font-weight:600;color:rgba(255,255,255,.62)">Recibes</div><div style="font-family:'Archivo',sans-serif;font-weight:800;font-size:30px;color:#EC6C2D;letter-spacing:-.03em">$9.226.868</div><div style="display:flex;justify-content:space-between;padding-top:10px;margin-top:10px;border-top:1px solid rgba(255,255,255,.1);font-size:14px"><span>Costo</span><span style="font-family:'Archivo',sans-serif;font-weight:700">$273.132</span></div></div></div>
+        </div>
+        <div style="flex:0 0 min(84%,420px);scroll-snap-align:start;display:flex;flex-direction:column">
+          <span style="width:44px;height:44px;border-radius:50%;background:#EC6C2D;color:#fff;display:grid;place-items:center;font-family:'Archivo',sans-serif;font-weight:800;font-size:18px">4</span>
+          <h3 style="margin:18px 0 8px;font-family:'Archivo',sans-serif;font-weight:800;font-size:26px;letter-spacing:-.025em">Liberamos tu dinero</h3>
+          <p style="margin:0;font-size:16px;line-height:26px;color:rgba(22,20,18,.7)">Una vez aprobada la operación, te depositamos.</p>
+          <div style="position:relative;overflow:hidden;margin-top:20px;flex:1;min-height:190px;display:flex;flex-direction:column;justify-content:center;padding:24px 18px;border-radius:20px;background:radial-gradient(60% 55% at 15% 88%,rgba(236,108,45,.5),rgba(236,108,45,0) 70%),radial-gradient(50% 50% at 90% 10%,rgba(255,168,84,.32),rgba(255,168,84,0) 70%),radial-gradient(70% 60% at 60% 60%,rgba(196,74,22,.28),rgba(196,74,22,0) 75%),#161412"><div data-grain style="position:absolute;inset:0;opacity:.1"></div><div style="position:relative;background:rgba(255,255,255,.1);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-radius:20px;box-shadow:0 10px 36px 0 rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.08);color:#fff;padding:18px;display:flex;align-items:center;gap:14px"><span style="width:40px;height:40px;border-radius:50%;background:#EC6C2D;display:grid;place-items:center;flex-shrink:0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#161412" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span><div><div style="font-family:'Archivo',sans-serif;font-weight:800;font-size:17px">Depósito realizado</div><div style="font-size:13px;color:rgba(255,255,255,.6)">$9.226.868 · Cta. cte. ···· 4821</div></div></div></div>
+        </div>
+          <div aria-hidden="true" style="flex:0 0 1px"></div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;margin-top:20px"><button type="button" onClick="{{ csGo0 }}" aria-label="Paso 1" style="width:{{ csW0 }};height:6px;border:0;padding:0;border-radius:3px;background:{{ csC0 }};cursor:pointer;transition:width .3s cubic-bezier(0.215,0.61,0.355,1), background .3s"></button><button type="button" onClick="{{ csGo1 }}" aria-label="Paso 2" style="width:{{ csW1 }};height:6px;border:0;padding:0;border-radius:3px;background:{{ csC1 }};cursor:pointer;transition:width .3s cubic-bezier(0.215,0.61,0.355,1), background .3s"></button><button type="button" onClick="{{ csGo2 }}" aria-label="Paso 3" style="width:{{ csW2 }};height:6px;border:0;padding:0;border-radius:3px;background:{{ csC2 }};cursor:pointer;transition:width .3s cubic-bezier(0.215,0.61,0.355,1), background .3s"></button><button type="button" onClick="{{ csGo3 }}" aria-label="Paso 4" style="width:{{ csW3 }};height:6px;border:0;padding:0;border-radius:3px;background:{{ csC3 }};cursor:pointer;transition:width .3s cubic-bezier(0.215,0.61,0.355,1), background .3s"></button></div>
+      </div>
+    </sc-if>
+
+    <p data-r style="margin:0;padding:clamp(48px,5vw,72px) 0 clamp(96px,10vw,150px);max-width:780px;font-family:'Archivo',sans-serif;font-weight:700;font-size:clamp(24px,2.4vw,32px);line-height:1.3;letter-spacing:-.02em;text-wrap:pretty">Sin burocracia, pero con criterio. <span style="color:rgba(22,20,18,.5)">Así cuidamos tu negocio y el nuestro.</span></p>
+  </section>
+
+  <section id="porque" data-screen-label="05 Por qué Kullyn" style="position:relative;background:linear-gradient(180deg,#fff 0%,#FBF8F5 14%,#FBF8F5 86%,#fff 100%)">
+    <div aria-hidden="true" style="position:absolute;inset:0;overflow:hidden;pointer-events:none">
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+        <div data-gdrift="0,0;60,20;-40,-10;0,0" data-gdur="30000" style="position:absolute;left:6%;top:-8%;width:58vw;height:30vw;will-change:transform"><div data-gpulse="9000" data-gblur="170" style="width:100%;height:100%;border-radius:50%;background:radial-gradient(closest-side,rgba(253,186,140,.6),rgba(253,196,158,0));filter:blur(170px)"></div></div>
+        <div data-gdrift="0,0;70,-30;-30,40;0,0" data-gdur="26000" style="position:absolute;left:-12vw;bottom:-24%;width:52vw;aspect-ratio:1;will-change:transform"><div data-gpulse="8000" data-gblur="170" style="width:100%;height:100%;border-radius:50%;background:radial-gradient(closest-side,rgba(240,144,72,.72),rgba(253,180,130,.3) 50%,rgba(253,180,130,0));filter:blur(170px)"></div></div>
+      </sc-if>
+      <div data-gpy style="position:absolute;left:50%;top:14%;bottom:2%;width:0;will-change:transform">
+        <div data-gdrift="0,0;0,-30;0,20;0,0" data-gdur="22000" style="position:absolute;left:0;top:0;width:0;height:100%">
+          <div data-gpulse="6000" data-gblur="70" style="position:absolute;left:-140px;top:0;width:280px;height:100%;border-radius:50%;background:radial-gradient(closest-side,rgba(236,108,45,.95),rgba(240,144,72,.5) 45%,rgba(253,196,158,0));filter:blur(70px)"></div>
+        </div>
+      </div>
+    </div>
+    <div style="position:relative;max-width:1440px;margin:0 auto;padding:clamp(88px,9vw,140px) clamp(20px,4.2vw,60px)">
+      <p data-r style="margin:0 0 20px;display:flex;width:fit-content;align-items:center;gap:8px;padding:6px 16px 6px 12px;border:.67px solid rgb(16,24,32);border-radius:20px;background:transparent;font-size:14px;font-weight:600;color:rgb(16,24,32)"><span style="width:6px;height:6px;border-radius:50%;background:#EC6C2D"></span>Por qué Kullyn</p>
+      <h2 data-r style="margin:0 0 clamp(40px,4vw,64px);max-width:820px;font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(36px,4vw,56px);line-height:1.04;letter-spacing:-.03em;text-wrap:balance">Lo que nos hace distintos<span style="display:block;margin-top:10px;font-weight:600;font-size:.5em;line-height:1.2;letter-spacing:-.015em;color:rgba(22,20,18,.55)">(y no es una tasa milagrosa).</span></h2>
+      <div style="display:grid;grid-template-columns:{{ pqCols }};gap:20px;align-items:stretch">
+        <div data-r data-card data-pq style="position:relative;overflow:hidden;min-height:{{ pqH1 }};display:flex;flex-direction:column;padding:30px;border-radius:24px;border:1px solid transparent;background:linear-gradient(180deg,rgba(255,255,255,.75),rgba(255,255,255,.45)) padding-box,linear-gradient(180deg,rgba(240,140,70,.55) 0%,rgba(240,140,70,.15) 45%,rgba(240,140,70,0) 75%) border-box;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 10px 36px rgba(16,24,32,.04);transition:transform .3s cubic-bezier(0.215,0.61,0.355,1),box-shadow .3s cubic-bezier(0.215,0.61,0.355,1)">
+          <div data-hborder aria-hidden="true" style="position:absolute;inset:0;border-radius:23px;border:1px solid transparent;background:linear-gradient(180deg,rgba(240,140,70,.85) 0%,rgba(240,140,70,.4) 60%,rgba(240,140,70,0) 92%) border-box;-webkit-mask:linear-gradient(#000 0 0) padding-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .3s;pointer-events:none"></div>
+          <div aria-hidden="true" style="position:absolute;left:0;right:0;top:0;height:{{ pqIll }};pointer-events:none;-webkit-mask-image:linear-gradient(180deg,#000 55%,transparent);mask-image:linear-gradient(180deg,#000 55%,transparent)">
+            <svg data-wf viewBox="0 0 320 260" preserveAspectRatio="xMidYMid slice" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="display:block;width:100%;height:100%;color:rgba(22,20,18,.11);transition:color .3s"><line data-wg x1="0" y1="232" x2="320" y2="232" stroke-dasharray="2 4"></line><line data-wg x1="300" y1="0" x2="300" y2="260" stroke-dasharray="2 4"></line><line data-wg x1="0" y1="128" x2="320" y2="128" stroke-dasharray="2 4"></line><rect data-wl x="130" y="40" width="168" height="60" rx="18"></rect><path data-wl d="M262 100 L272 114 L276 100"></path><path data-wl d="M152 62 H262 M152 80 H226"></path><rect data-wl x="34" y="150" width="168" height="60" rx="18"></rect><path data-wl d="M58 210 L52 224 L68 210"></path><path data-wl d="M56 172 H170 M56 190 H130"></path><path id="pq-c1" data-wl d="M130 70 H118 Q104 70 104 84 V150"></path><circle data-wd cx="130" cy="70" r="4" fill="#EC6C2D" stroke="none"></circle><circle data-wd cx="104" cy="150" r="4" fill="#EC6C2D" stroke="none"></circle><circle data-wtravel data-path="pq-c1" cx="130" cy="70" r="2.5" fill="#EC6C2D" stroke="none" opacity="0"></circle></svg>
+          </div>
+          <span data-ico style="position:relative;width:52px;height:52px;border-radius:50%;background:rgba(0,0,0,.06);color:rgba(22,20,18,.72);display:grid;place-items:center;transition:background .3s, color .3s"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
+          <div style="position:relative;margin-top:auto;padding-top:24px">
+            <h3 style="margin:0 0 12px;font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(26px,2.1vw,30px);line-height:1.1;letter-spacing:-.02em;color:#161412">Personas, no robots.</h3>
+            <p style="margin:0;font-size:17px;line-height:1.6;color:rgba(22,20,18,.58)">Usamos IT, Inteligencia Tradicional: conversar, entender tu negocio y mirar más allá de un número.</p>
+          </div>
+        </div>
+        <div data-r data-card data-pq style="position:relative;overflow:hidden;min-height:{{ pqH }};display:flex;flex-direction:column;padding:30px;border-radius:24px;border:1px solid transparent;background:linear-gradient(180deg,rgba(255,255,255,.75),rgba(255,255,255,.45)) padding-box,linear-gradient(180deg,rgba(240,140,70,.55) 0%,rgba(240,140,70,.15) 45%,rgba(240,140,70,0) 75%) border-box;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 10px 36px rgba(16,24,32,.04);transition:transform .3s cubic-bezier(0.215,0.61,0.355,1),box-shadow .3s cubic-bezier(0.215,0.61,0.355,1)">
+          <div data-hborder aria-hidden="true" style="position:absolute;inset:0;border-radius:23px;border:1px solid transparent;background:linear-gradient(180deg,rgba(240,140,70,.85) 0%,rgba(240,140,70,.4) 60%,rgba(240,140,70,0) 92%) border-box;-webkit-mask:linear-gradient(#000 0 0) padding-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .3s;pointer-events:none"></div>
+          <div aria-hidden="true" style="position:absolute;left:0;right:0;top:0;height:{{ pqIll }};pointer-events:none;-webkit-mask-image:linear-gradient(180deg,#000 55%,transparent);mask-image:linear-gradient(180deg,#000 55%,transparent)">
+            <svg data-wf viewBox="0 0 320 260" preserveAspectRatio="xMidYMid slice" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="display:block;width:100%;height:100%;color:rgba(22,20,18,.11);transition:color .3s"><line data-wg x1="0" y1="232" x2="320" y2="232" stroke-dasharray="2 4"></line><line data-wg x1="20" y1="0" x2="20" y2="260" stroke-dasharray="2 4"></line><line data-wg x1="0" y1="40" x2="320" y2="40" stroke-dasharray="2 4"></line><rect data-wl x="112" y="22" width="176" height="250" rx="14"></rect><path data-wl d="M132 52 H196"></path><rect data-wl x="244" y="44" width="28" height="16" rx="5"></rect><path data-wl d="M132 86 H268 M132 104 H246 M132 122 H260 M132 140 H224"></path><line data-wg x1="132" y1="176" x2="268" y2="176" stroke-dasharray="2 4"></line><path data-wl d="M132 200 H170"></path><rect data-wl x="206" y="190" width="62" height="20" rx="6"></rect><path id="pq-c2" data-wl d="M20 120 V186 Q20 200 34 200 H112"></path><circle data-wd cx="194" cy="200" r="4" fill="#EC6C2D" stroke="none"></circle><circle data-wd cx="20" cy="120" r="4" fill="#EC6C2D" stroke="none"></circle><circle data-wtravel data-path="pq-c2" cx="20" cy="120" r="2.5" fill="#EC6C2D" stroke="none" opacity="0"></circle></svg>
+          </div>
+          <span data-ico style="position:relative;width:52px;height:52px;border-radius:50%;background:rgba(0,0,0,.06);color:rgba(22,20,18,.72);display:grid;place-items:center;transition:background .3s, color .3s"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"></path><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 17.5v-11"></path></svg></span>
+          <div style="position:relative;margin-top:auto;padding-top:24px">
+            <h3 style="margin:0 0 12px;font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(26px,2.1vw,30px);line-height:1.1;letter-spacing:-.02em;color:#161412">Cuentas claras.</h3>
+            <p style="margin:0;font-size:17px;line-height:1.6;color:rgba(22,20,18,.58)">Cuánto recibes y cuándo, antes de firmar. No te cobramos TAG ni estacionamiento: nada de cobros sorpresa.</p>
+          </div>
+        </div>
+        <div data-r data-card data-pq style="position:relative;overflow:hidden;min-height:{{ pqH }};display:flex;flex-direction:column;padding:30px;border-radius:24px;border:1px solid transparent;background:linear-gradient(180deg,rgba(255,255,255,.75),rgba(255,255,255,.45)) padding-box,linear-gradient(180deg,rgba(240,140,70,.55) 0%,rgba(240,140,70,.15) 45%,rgba(240,140,70,0) 75%) border-box;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 10px 36px rgba(16,24,32,.04);transition:transform .3s cubic-bezier(0.215,0.61,0.355,1),box-shadow .3s cubic-bezier(0.215,0.61,0.355,1)">
+          <div data-hborder aria-hidden="true" style="position:absolute;inset:0;border-radius:23px;border:1px solid transparent;background:linear-gradient(180deg,rgba(240,140,70,.85) 0%,rgba(240,140,70,.4) 60%,rgba(240,140,70,0) 92%) border-box;-webkit-mask:linear-gradient(#000 0 0) padding-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .3s;pointer-events:none"></div>
+          <div aria-hidden="true" style="position:absolute;left:0;right:0;top:0;height:{{ pqIll }};pointer-events:none;-webkit-mask-image:linear-gradient(180deg,#000 55%,transparent);mask-image:linear-gradient(180deg,#000 55%,transparent)">
+            <svg data-wf viewBox="0 0 320 260" preserveAspectRatio="xMidYMid slice" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="display:block;width:100%;height:100%;color:rgba(22,20,18,.11);transition:color .3s"><line data-wg x1="0" y1="232" x2="320" y2="232" stroke-dasharray="2 4"></line><line data-wg x1="165" y1="0" x2="165" y2="260" stroke-dasharray="2 4"></line><line data-wg x1="0" y1="40" x2="320" y2="40" stroke-dasharray="2 4"></line><rect data-wl x="24" y="122" width="100" height="66" rx="14"></rect><path data-wl d="M42 146 H100 M42 164 H84"></path><rect data-wl x="206" y="58" width="104" height="66" rx="14"></rect><path data-wl d="M224 82 H284 M224 100 H266"></path><path id="pq-c3" data-wl d="M124 155 C 168 155, 162 91, 206 91"></path><path data-wl d="M165 106 C171 110 177 111 181 111 V122 C181 131 174 136 165 139 C156 136 149 131 149 122 V111 C153 111 159 110 165 106 Z" fill="#FBF8F5"></path><path data-wl d="M159 122 L163 126 L171 118"></path><circle data-wd cx="124" cy="155" r="4" fill="#EC6C2D" stroke="none"></circle><circle data-wd cx="206" cy="91" r="4" fill="#EC6C2D" stroke="none"></circle><circle data-wtravel data-path="pq-c3" cx="124" cy="155" r="2.5" fill="#EC6C2D" stroke="none" opacity="0"></circle></svg>
+          </div>
+          <span data-ico style="position:relative;width:52px;height:52px;border-radius:50%;background:rgba(0,0,0,.06);color:rgba(22,20,18,.72);display:grid;place-items:center;transition:background .3s, color .3s"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg></span>
+          <div style="position:relative;margin-top:auto;padding-top:24px">
+            <h3 style="margin:0 0 12px;font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(26px,2.1vw,30px);line-height:1.1;letter-spacing:-.02em;color:#161412">Cuidamos a tu cliente.</h3>
+            <p style="margin:0;font-size:17px;line-height:1.6;color:rgba(22,20,18,.58)">Tu pagador es tu negocio de mañana. Gestionamos el cobro con respeto, sin quemarte la relación.</p>
+          </div>
+        </div>
+        <div data-r data-card data-pq style="position:relative;overflow:hidden;min-height:{{ pqH }};display:flex;flex-direction:column;padding:30px;border-radius:24px;border:1px solid transparent;background:linear-gradient(180deg,rgba(255,255,255,.75),rgba(255,255,255,.45)) padding-box,linear-gradient(180deg,rgba(240,140,70,.55) 0%,rgba(240,140,70,.15) 45%,rgba(240,140,70,0) 75%) border-box;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 10px 36px rgba(16,24,32,.04);transition:transform .3s cubic-bezier(0.215,0.61,0.355,1),box-shadow .3s cubic-bezier(0.215,0.61,0.355,1)">
+          <div data-hborder aria-hidden="true" style="position:absolute;inset:0;border-radius:23px;border:1px solid transparent;background:linear-gradient(180deg,rgba(240,140,70,.85) 0%,rgba(240,140,70,.4) 60%,rgba(240,140,70,0) 92%) border-box;-webkit-mask:linear-gradient(#000 0 0) padding-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .3s;pointer-events:none"></div>
+          <div aria-hidden="true" style="position:absolute;left:0;right:0;top:0;height:{{ pqIll }};pointer-events:none;-webkit-mask-image:linear-gradient(180deg,#000 55%,transparent);mask-image:linear-gradient(180deg,#000 55%,transparent)">
+            <svg data-wf viewBox="0 0 320 260" preserveAspectRatio="xMidYMid slice" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="display:block;width:100%;height:100%;color:rgba(22,20,18,.11);transition:color .3s"><line data-wg x1="0" y1="232" x2="320" y2="232" stroke-dasharray="2 4"></line><line data-wg x1="300" y1="0" x2="300" y2="260" stroke-dasharray="2 4"></line><line data-wg x1="0" y1="40" x2="320" y2="40" stroke-dasharray="2 4"></line><rect data-wl x="34" y="64" width="124" height="156" rx="16"></rect><rect data-wl x="166" y="64" width="124" height="156" rx="16"></rect><path data-wl d="M158 112 H166 M158 172 H166"></path><path data-wl d="M52 88 H100 M184 88 H232"></path><path id="pq-c4" data-wl d="M52 196 C 96 196, 104 164, 140 156 S 214 120, 270 100"></path><circle data-wd cx="270" cy="100" r="4" fill="#EC6C2D" stroke="none"></circle><circle data-wd cx="52" cy="196" r="4" fill="#EC6C2D" stroke="none"></circle><circle data-wtravel data-path="pq-c4" cx="52" cy="196" r="2.5" fill="#EC6C2D" stroke="none" opacity="0"></circle></svg>
+          </div>
+          <span data-ico style="position:relative;width:52px;height:52px;border-radius:50%;background:rgba(0,0,0,.06);color:rgba(22,20,18,.72);display:grid;place-items:center;transition:background .3s, color .3s"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" x2="4" y1="22" y2="15"></line></svg></span>
+          <div style="position:relative;margin-top:auto;padding-top:24px">
+            <h3 style="margin:0 0 12px;font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(26px,2.1vw,30px);line-height:1.1;letter-spacing:-.02em;color:#161412">Jugamos en tu equipo.</h3>
+            <p style="margin:0;font-size:17px;line-height:1.6;color:rgba(22,20,18,.58)">No competimos contigo. Te ayudamos a remar, no a empujar: si a tu negocio le va bien, a nosotros también.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="preguntas" data-screen-label="06 Preguntas" style="position:relative;max-width:1440px;margin:0 auto;padding:clamp(88px,9vw,140px) clamp(20px,4.2vw,60px) clamp(96px,10vw,160px);display:flex;flex-direction:column;align-items:center">
+    <div aria-hidden="true" style="position:absolute;top:0;bottom:0;left:50%;width:100vw;margin-left:-50vw;overflow:hidden;pointer-events:none;background:radial-gradient(32% 40% at 0% 45%,rgba(253,196,158,.3),rgba(253,196,158,0) 100%),radial-gradient(32% 40% at 100% 68%,rgba(253,196,158,.24),rgba(253,196,158,0) 100%)">
+      <div data-gdrift="0,0;-80,30;60,-40;0,0" data-gdur="26000" style="position:absolute;left:50%;top:58%;width:64vw;height:34vw;margin:-17vw 0 0 -32vw;will-change:transform"><div data-gpulse="9000" data-gblur="130" style="width:100%;height:100%;border-radius:50%;background:radial-gradient(closest-side,rgba(240,144,72,.46),rgba(253,196,158,.22) 55%,rgba(253,196,158,0));filter:blur(130px)"></div></div>
+      <div data-gbridge="light" style="position:absolute;left:50%;bottom:-8%;width:80vw;height:42%;transform:translateX(-50%)"><div data-gblur="130" style="width:100%;height:100%;border-radius:50%;background:radial-gradient(closest-side,rgba(240,144,72,.34),rgba(253,196,158,.14) 60%,rgba(253,196,158,0));filter:blur(130px)"></div></div>
+    </div>
+    <p data-r style="position:relative;z-index:1;margin:0 0 24px;display:flex;width:fit-content;align-items:center;gap:8px;padding:6px 16px 6px 12px;border:.67px solid rgb(16,24,32);border-radius:20px;background:transparent;font-size:14px;font-weight:600;color:rgb(16,24,32)"><span style="width:6px;height:6px;border-radius:50%;background:#EC6C2D"></span>Preguntas frecuentes</p>
+    <h2 data-r style="position:relative;z-index:1;margin:0;text-align:center;font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(36px,4.4vw,64px);line-height:1;letter-spacing:-.035em;text-wrap:balance">Lo que siempre nos preguntan.</h2>
+    <div data-r data-glass style="position:relative;z-index:1;margin-top:clamp(48px,5vw,72px);width:100%;max-width:1010px;background:rgba(255,255,255,.25);border-radius:20px;box-shadow:0 10px 36px 0 rgba(16,24,32,.06),0 0 0 1px rgba(230,236,242,.08);padding:clamp(8px,1.6vw,20px) clamp(8px,2.4vw,32px);overflow:hidden">
+      <div style="border-bottom:1px solid rgba(22,20,18,.08)">
+        <button onClick="{{ tf0 }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;border:0;background:transparent;padding:22px clamp(18px,2.4vw,30px);cursor:pointer;text-align:left;font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(16px,1.4vw,19px);color:#161412">¿Aprueban todas las facturas?<span style="width:42px;height:42px;border-radius:20px;border:.67px solid rgb(16,24,32);background:{{ fBg0 }};color:{{ fFg0 }};display:grid;place-items:center;flex-shrink:0;transition:background .3s, color .3s"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5 12h14"></path><path d="M12 5v14" style="transform-origin:12px 12px;transition:transform .35s cubic-bezier(0.215,0.61,0.355,1);transform:{{ fRot0 }}"></path></svg></span></button>
+        <div style="display:grid;grid-template-rows:{{ fRows0 }};transition:grid-template-rows .45s cubic-bezier(0.215,0.61,0.355,1)"><div style="overflow:hidden"><p style="margin:0;padding:0 clamp(18px,2.4vw,30px) 24px;max-width:720px;font-size:16px;line-height:26px;color:rgba(22,20,18,.7)">No. Revisamos cada operación, porque financiar sin mirar no le hace bien a nadie.</p></div></div>
+      </div>
+      <div style="border-bottom:1px solid rgba(22,20,18,.08)">
+        <button onClick="{{ tf1 }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;border:0;background:transparent;padding:22px clamp(18px,2.4vw,30px);cursor:pointer;text-align:left;font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(16px,1.4vw,19px);color:#161412">¿Cuánto me cuesta?<span style="width:42px;height:42px;border-radius:20px;border:.67px solid rgb(16,24,32);background:{{ fBg1 }};color:{{ fFg1 }};display:grid;place-items:center;flex-shrink:0;transition:background .3s, color .3s"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5 12h14"></path><path d="M12 5v14" style="transform-origin:12px 12px;transition:transform .35s cubic-bezier(0.215,0.61,0.355,1);transform:{{ fRot1 }}"></path></svg></span></button>
+        <div style="display:grid;grid-template-rows:{{ fRows1 }};transition:grid-template-rows .45s cubic-bezier(0.215,0.61,0.355,1)"><div style="overflow:hidden"><p style="margin:0;padding:0 clamp(18px,2.4vw,30px) 24px;max-width:720px;font-size:16px;line-height:26px;color:rgba(22,20,18,.7)">Depende de la factura, el plazo y el pagador. Verás todos los costos antes de firmar.</p></div></div>
+      </div>
+      <div style="border-bottom:1px solid rgba(22,20,18,.08)">
+        <button onClick="{{ tf2 }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;border:0;background:transparent;padding:22px clamp(18px,2.4vw,30px);cursor:pointer;text-align:left;font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(16px,1.4vw,19px);color:#161412">¿Cuánto se demoran?<span style="width:42px;height:42px;border-radius:20px;border:.67px solid rgb(16,24,32);background:{{ fBg2 }};color:{{ fFg2 }};display:grid;place-items:center;flex-shrink:0;transition:background .3s, color .3s"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5 12h14"></path><path d="M12 5v14" style="transform-origin:12px 12px;transition:transform .35s cubic-bezier(0.215,0.61,0.355,1);transform:{{ fRot2 }}"></path></svg></span></button>
+        <div style="display:grid;grid-template-rows:{{ fRows2 }};transition:grid-template-rows .45s cubic-bezier(0.215,0.61,0.355,1)"><div style="overflow:hidden"><p style="margin:0;padding:0 clamp(18px,2.4vw,30px) 24px;max-width:720px;font-size:16px;line-height:26px;color:rgba(22,20,18,.7)">Depende de la operación y la documentación. Cuando tenemos todo, nos movemos rápido.</p></div></div>
+      </div>
+      <div style="">
+        <button onClick="{{ tf3 }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;border:0;background:transparent;padding:22px clamp(18px,2.4vw,30px);cursor:pointer;text-align:left;font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(16px,1.4vw,19px);color:#161412">¿Mi cliente se va a enterar?<span style="width:42px;height:42px;border-radius:20px;border:.67px solid rgb(16,24,32);background:{{ fBg3 }};color:{{ fFg3 }};display:grid;place-items:center;flex-shrink:0;transition:background .3s, color .3s"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5 12h14"></path><path d="M12 5v14" style="transform-origin:12px 12px;transition:transform .35s cubic-bezier(0.215,0.61,0.355,1);transform:{{ fRot3 }}"></path></svg></span></button>
+        <div style="display:grid;grid-template-rows:{{ fRows3 }};transition:grid-template-rows .45s cubic-bezier(0.215,0.61,0.355,1)"><div style="overflow:hidden"><p style="margin:0;padding:0 clamp(18px,2.4vw,30px) 24px;max-width:720px;font-size:16px;line-height:26px;color:rgba(22,20,18,.7)">[Respuesta por definir con operaciones]</p></div></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<section id="contacto" data-screen-label="07 Contacto" style="position:relative;overflow:hidden;background:#161412;color:#fff;margin-top:-24px">
+  <div aria-hidden="true" style="position:absolute;inset:0;overflow:hidden;pointer-events:none">
+    <div data-gint style="position:absolute;inset:0;opacity:.7">
+      <div data-gdrift="0,0;-60,-20;50,10;0,0" data-gdur="28000" style="position:absolute;left:50%;bottom:-18%;width:80vw;height:40vw;margin-left:-40vw;will-change:transform"><div data-gpulse="8000" data-gblur="160" style="width:100%;height:100%;border-radius:50%;background:radial-gradient(closest-side,rgba(236,108,45,.5),rgba(196,74,22,.22) 55%,rgba(196,74,22,0));filter:blur(160px)"></div></div>
+      <div data-gbridge="dark" style="position:absolute;left:50%;top:-22%;width:90vw;height:52%;transform:translateX(-50%);opacity:.5"><div data-gblur="140" style="width:100%;height:100%;border-radius:50%;background:radial-gradient(closest-side,rgba(236,108,45,.5),rgba(236,108,45,0));filter:blur(140px)"></div></div>
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+        <div data-gdrift="0,0;80,-60;30,70;0,0" data-gdur="26000" style="position:absolute;left:-20vw;top:12%;width:46vw;aspect-ratio:1;will-change:transform"><div data-gpulse="7000" data-gblur="160" style="width:100%;height:100%;border-radius:50%;background:radial-gradient(closest-side,rgba(255,168,84,.55),rgba(214,96,36,.3) 52%,rgba(214,96,36,0));filter:blur(160px)"></div></div>
+        <div data-gdrift="0,0;-70,50;-20,-60;0,0" data-gdur="30000" style="position:absolute;right:-22vw;top:34%;width:50vw;aspect-ratio:1;will-change:transform"><div data-gpulse="9000" data-gblur="170" style="width:100%;height:100%;border-radius:50%;background:radial-gradient(closest-side,rgba(196,74,22,.62),rgba(236,108,45,.26) 54%,rgba(236,108,45,0));filter:blur(170px)"></div></div>
+      </sc-if>
+      <div data-gdrift="0,0;-50,30;40,-30;0,0" data-gdur="22000" style="position:absolute;left:62%;top:52%;width:42vw;aspect-ratio:1;margin:-21vw 0 0 -21vw;will-change:transform"><div data-gpulse="8000" data-gblur="150" style="width:100%;height:100%;border-radius:50%;background:radial-gradient(closest-side,rgba(240,144,72,.5),rgba(214,96,36,.22) 55%,rgba(214,96,36,0));filter:blur(150px)"></div></div>
+    </div>
+    <div data-grain style="position:absolute;inset:0;opacity:.04"></div>
+  </div>
+  <div style="position:relative;max-width:1440px;margin:0 auto;padding:calc(24px + clamp(88px,9vw,140px)) clamp(20px,4.2vw,60px) clamp(88px,9vw,140px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(48px,6vw,96px);align-items:center">
+    <div>
+      <p data-r style="margin:0 0 20px;display:flex;width:fit-content;align-items:center;gap:8px;padding:6px 16px 6px 12px;border:.67px solid rgba(255,255,255,.75);border-radius:20px;background:transparent;font-size:14px;font-weight:600;color:#fff"><span style="width:6px;height:6px;border-radius:50%;background:#EC6C2D"></span>Contacto</p>
+      <h2 data-r style="margin:0;font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(38px,4.2vw,58px);line-height:1.04;letter-spacing:-.03em;text-wrap:balance">Tu factura ya es tuya. Vamos por tu dinero.</h2>
+      <p data-r style="margin:24px 0 0;max-width:560px;font-size:18px;line-height:28px;color:rgba(255,255,255,.7)">Déjanos tus datos y te contacta una persona del equipo, no un bot.</p>
+      <div style="display:flex;flex-direction:column;gap:16px;margin-top:40px">
+        <a data-r href="mailto:hola@kullyn.com" style="display:flex;align-items:center;gap:14px;color:#fff;font-size:16px"><span style="width:44px;height:44px;border-radius:50%;background:#EC6C2D;color:#161412;display:grid;place-items:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg></span>hola@kullyn.com</a>
+        <a data-r href="tel:+56983792838" style="display:flex;align-items:center;gap:14px;color:#fff;font-size:16px"><span style="width:44px;height:44px;border-radius:50%;background:#EC6C2D;color:#161412;display:grid;place-items:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></span>+56 9 8379 2838</a>
+        <div data-r style="display:flex;align-items:center;gap:14px;font-size:16px"><span style="width:44px;height:44px;border-radius:50%;background:#EC6C2D;color:#161412;display:grid;place-items:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></span>Lunes a viernes, de 9:00 a 18:00 hrs.</div>
+      </div>
+    </div>
+
+    <div data-r data-glass style="background:rgba(255,255,255,.1);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-radius:20px;box-shadow:0 10px 36px 0 rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.08);color:#fff;padding:clamp(28px,3.4vw,56px)">
+      <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+        <form onSubmit="{{ onSubmit }}" style="display:flex;flex-direction:column">
+          <h3 style="margin:0 0 clamp(24px,2.6vw,36px);font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(30px,2.6vw,40px);letter-spacing:-.02em;line-height:1.1">Hablemos</h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,max(200px,calc(50% - 12px))),1fr));column-gap:24px;row-gap:20px">
+            <input required name="nombre" placeholder="Nombre" aria-label="Nombre" style="width:100%;height:52px;border:0;border-bottom:1px solid rgba(255,255,255,.3);border-radius:0;background:transparent;padding:0;font-family:'Figtree',sans-serif;font-size:16px;color:#fff;outline:none;transition:border-color .2s" style-focus="border-bottom-color:#EC6C2D">
+            <input required name="rut" placeholder="RUT de la empresa" aria-label="RUT de la empresa" style="width:100%;height:52px;border:0;border-bottom:1px solid rgba(255,255,255,.3);border-radius:0;background:transparent;padding:0;font-family:'Figtree',sans-serif;font-size:16px;color:#fff;outline:none;transition:border-color .2s" style-focus="border-bottom-color:#EC6C2D">
+            <input required type="tel" name="telefono" placeholder="Teléfono o WhatsApp" aria-label="Teléfono o WhatsApp" style="width:100%;height:52px;border:0;border-bottom:1px solid rgba(255,255,255,.3);border-radius:0;background:transparent;padding:0;font-family:'Figtree',sans-serif;font-size:16px;color:#fff;outline:none;transition:border-color .2s" style-focus="border-bottom-color:#EC6C2D">
+            <input type="email" name="correo" placeholder="Correo electrónico" aria-label="Correo electrónico" style="width:100%;height:52px;border:0;border-bottom:1px solid rgba(255,255,255,.3);border-radius:0;background:transparent;padding:0;font-family:'Figtree',sans-serif;font-size:16px;color:#fff;outline:none;transition:border-color .2s" style-focus="border-bottom-color:#EC6C2D">
+          </div>
+          <div style="margin-top:36px;font-size:14px;color:rgba(255,255,255,.62)">Monto aproximado de facturas</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,max(104px,calc(25% - 6px))),1fr));gap:8px;margin-top:14px">
+              <button type="button" onClick="{{ mSel0 }}" style="height:40px;padding:0 10px;border-radius:20px;border:.67px solid rgba(255,255,255,.75);background:{{ mBg0 }};color:{{ mFg0 }};cursor:pointer;font-family:'Figtree',sans-serif;font-size:13px;font-weight:500;white-space:nowrap;transition:background .25s, color .25s">Menos de $5M</button>
+              <button type="button" onClick="{{ mSel1 }}" style="height:40px;padding:0 10px;border-radius:20px;border:.67px solid rgba(255,255,255,.75);background:{{ mBg1 }};color:{{ mFg1 }};cursor:pointer;font-family:'Figtree',sans-serif;font-size:13px;font-weight:500;white-space:nowrap;transition:background .25s, color .25s">$5M a $20M</button>
+              <button type="button" onClick="{{ mSel2 }}" style="height:40px;padding:0 10px;border-radius:20px;border:.67px solid rgba(255,255,255,.75);background:{{ mBg2 }};color:{{ mFg2 }};cursor:pointer;font-family:'Figtree',sans-serif;font-size:13px;font-weight:500;white-space:nowrap;transition:background .25s, color .25s">$20M a $50M</button>
+              <button type="button" onClick="{{ mSel3 }}" style="height:40px;padding:0 10px;border-radius:20px;border:.67px solid rgba(255,255,255,.75);background:{{ mBg3 }};color:{{ mFg3 }};cursor:pointer;font-family:'Figtree',sans-serif;font-size:13px;font-weight:500;white-space:nowrap;transition:background .25s, color .25s">Más de $50M</button>
+          </div>
+          <div style="height:36px"></div>
+          <button type="submit" data-btn style="position:relative;overflow:hidden;margin-top:8px;width:100%;height:60px;border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;border-radius:999px;background:#fff;color:rgb(16,24,32);box-shadow:0 10px 36px rgba(0,0,0,.25);text-transform:uppercase;letter-spacing:.16em;font-family:'Archivo',sans-serif;font-weight:600;font-size:15px"><span data-bg style="position:absolute;inset:0;background:#FDEFE6;clip-path:inset(100% 0 0 0)"></span><span style="position:relative;display:inline-flex;align-items:center;gap:10px;opacity:{{ btnLblOp }};transition:opacity .2s"><span data-lbl style="display:inline-flex">Bánkame</span><span style="display:inline-flex;overflow:hidden"><svg data-arw width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span></span><sc-if value="{{ isLoading }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;inset:0;display:grid;place-items:center">{{ spinner }}</span></sc-if></button>
+        </form>
+      </sc-if>
+      <sc-if value="{{ isSent }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:40px 8px;text-align:center">
+          <div style="width:64px;height:64px;margin:0 auto;border-radius:50%;background:#EC6C2D;display:grid;place-items:center"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#161412" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></div>
+          <h3 style="margin:24px 0 8px;font-family:'Archivo',sans-serif;font-weight:800;font-size:26px;letter-spacing:-.02em">Recibimos tus datos.</h3>
+          <p style="margin:0 auto;max-width:340px;font-size:16px;line-height:26px;color:rgba(255,255,255,.72)">Una persona del equipo te va a contactar para conversar sobre tus facturas.</p>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+  <div style="position:relative;max-width:1440px;margin:0 auto;padding:0 clamp(20px,4.2vw,60px) 28px">
+    <div aria-hidden="true" style="position:absolute;left:50%;top:0;width:220vw;aspect-ratio:1;margin-left:-110vw;border-radius:50%;border:1px solid rgba(240,144,72,.38);box-shadow:0 0 40px rgba(236,108,45,.22),inset 0 0 40px rgba(236,108,45,.12);pointer-events:none"></div>
+    <div style="position:relative;padding-top:clamp(64px,7vw,104px);display:grid;grid-template-columns:{{ ftCols }};gap:clamp(32px,4vw,56px)">
+      <div style="display:flex;flex-direction:column;gap:14px;grid-column:{{ ftBrand }};min-width:0;max-width:420px">
+        <img src="assets/kullyn-logo-clean.png" alt="Kullyn" style="height:34px;width:auto;align-self:flex-start">
+        <p style="margin:6px 0 0;font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(22px,2vw,28px);line-height:1.2;letter-spacing:-.02em;color:#fff;text-wrap:balance">Ya vendiste, ya facturaste. Nosotros liberamos tu dinero.</p>
+        <span style="margin-top:8px;font-size:14px;color:rgba(255,255,255,.6)">Rosario Norte 100, Las Condes</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px"><span style="font-size:12px;font-weight:600;letter-spacing:.16em;color:#EC6C2D;margin-bottom:6px">KULLYN</span><a href="#que" onClick="{{ goQue }}" style="color:rgba(255,255,255,.72);font-size:15px;transition:color .2s" style-hover="color:#F09048">Qué hacemos</a><a href="#como" onClick="{{ goComo }}" style="color:rgba(255,255,255,.72);font-size:15px;transition:color .2s" style-hover="color:#F09048">Cómo funciona</a><a href="#porque" onClick="{{ goPorque }}" style="color:rgba(255,255,255,.72);font-size:15px;transition:color .2s" style-hover="color:#F09048">Por qué Kullyn</a></div>
+      <div style="display:flex;flex-direction:column;gap:12px"><span style="font-size:12px;font-weight:600;letter-spacing:.16em;color:#EC6C2D;margin-bottom:6px">AYUDA</span><a href="#preguntas" onClick="{{ goFaq }}" style="color:rgba(255,255,255,.72);font-size:15px;transition:color .2s" style-hover="color:#F09048">Preguntas</a><a href="#contacto" onClick="{{ goContacto }}" style="color:rgba(255,255,255,.72);font-size:15px;transition:color .2s" style-hover="color:#F09048">Contacto</a><a href="tel:+56983792838" style="color:rgba(255,255,255,.72);font-size:15px;transition:color .2s" style-hover="color:#F09048">+56 9 8379 2838</a><a href="mailto:hola@kullyn.com" style="color:rgba(255,255,255,.72);font-size:15px;transition:color .2s" style-hover="color:#F09048">hola@kullyn.com</a></div>
+      <div style="display:flex;flex-direction:column;gap:12px"><span style="font-size:12px;font-weight:600;letter-spacing:.16em;color:#EC6C2D;margin-bottom:6px">LEGAL</span><a href="#" style="color:rgba(255,255,255,.72);font-size:15px;transition:color .2s" style-hover="color:#F09048">Términos y condiciones</a><a href="#" style="color:rgba(255,255,255,.72);font-size:15px;transition:color .2s" style-hover="color:#F09048">Política de privacidad</a></div>
+    </div>
+    <div data-r aria-hidden="true" style="position:relative;margin-top:clamp(56px,7vw,112px);font-family:'Anton',sans-serif;font-weight:400;text-transform:uppercase;font-size:min(16.5vw,236px);line-height:.82;letter-spacing:-.005em;white-space:nowrap;text-align:center;background:linear-gradient(180deg,rgba(255,255,255,.12) 0%,rgba(240,144,72,.1) 50%,rgba(236,108,45,0) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;user-select:none">Te bankamos.</div>
+    <div style="position:relative;margin-top:28px;padding-top:22px;border-top:1px solid rgba(255,255,255,.08);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;font-size:13px;color:rgba(255,255,255,.5)">
+      <span style="display:flex;flex-wrap:wrap;gap:6px 20px"><span>© 2026 Kullyn. Santiago, Chile.</span><span>Desarrollado por <a href="https://deltadigital.cl" target="_blank" rel="noopener" style="color:rgba(255,255,255,.8);transition:color .2s" style-hover="color:#F09048">DeltaDigital</a></span></span>
+      <a href="#top" onClick="{{ goTop }}" style="display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:20px;background:rgba(244,244,244,.16);-webkit-backdrop-filter:blur(8.5px);backdrop-filter:blur(8.5px);border:.67px solid rgba(255,255,255,.04);color:#fff;font-size:13px;font-weight:500;transition:background .25s" style-hover="background:rgba(244,244,244,.26);color:#fff">Volver arriba<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC6C2D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"></path><path d="M12 19V5"></path></svg></a>
+    </div>
+  </div>
+</section>
+
+<sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+  <a href="https://wa.me/56983792838?text=Hola%2C%20quiero%20liberar%20mi%20dinero" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp" style="position:fixed;right:20px;bottom:20px;z-index:60;width:56px;height:56px;border-radius:50%;background:#EC6C2D;color:#fff;display:grid;place-items:center;box-shadow:0 14px 30px rgba(0,0,0,.25);transition:transform .25s, background .25s" style-hover="background:#F09048;color:#fff;transform:scale(1.06)"><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.82 9.82 0 0 1 2.89 6.99c0 5.45-4.44 9.88-9.88 9.88m8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.31-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.16-3.49-8.41"></path></svg></a>
+</sc-if>
+<sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+  <a href="https://wa.me/56983792838?text=Hola%2C%20quiero%20liberar%20mi%20dinero" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp" style="position:fixed;left:16px;right:16px;bottom:max(16px,env(safe-area-inset-bottom));z-index:60;height:54px;border-radius:999px;background:#EC6C2D;color:#fff;display:flex;align-items:center;justify-content:center;gap:10px;font-family:'Archivo',sans-serif;font-weight:700;font-size:15px;box-shadow:0 14px 36px rgba(0,0,0,.3)" style-hover="background:#F09048;color:#fff"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.82 9.82 0 0 1 2.89 6.99c0 5.45-4.44 9.88-9.88 9.88m8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.31-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.16-3.49-8.41"></path></svg>Escríbenos por WhatsApp</a>
+  <div aria-hidden="true" style="height:86px;background:#161412"></div>
+</sc-if>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;tasa&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:0.99,&quot;min&quot;:0.5,&quot;max&quot;:3,&quot;step&quot;:0.01,&quot;unit&quot;:&quot;%&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Simulador&quot;},&quot;showCursors&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Mockups&quot;},&quot;animaciones&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Movimiento&quot;}}">
+class Component extends DCLogic {
+  state = { amount: 10000000, plazoIdx: 1, otro: 120, rateOpen: false, disp: null, isMobile: false, menu: false, faq: 0, form: 'idle', monto: 1, hdrTop: true, cs: 0 };
+
+  R() { const n = this.rootRef && this.rootRef.current; return (n && n.getRootNode && n.getRootNode()) || document; }
+  safe(fn) { try { fn(); } catch (e) { console.error('Kullyn:', e && (e.stack || e.message || String(e))); } }
+  tasa() { return Number(this.props.tasa ?? 0.99); }
+  days(s = this.state) { return [30, 60, 90][s.plazoIdx] ?? Math.max(1, s.otro || 1); }
+  calc(a, d) {
+    a = Math.max(0, a || 0); d = Math.max(1, d || 1);
+    const costo = a > 0 ? Math.round(a * (this.tasa() / 100) * d / 30 + 75132) : 0;
+    return { amount: a, days: d, costo, hoy: Math.max(0, Math.round(a * 0.95 - costo)), plazo: Math.round(a * 0.05) };
+  }
+
+  componentDidMount() { try { this._mount(); } catch (e) { console.error('Kullyn mount err:', e && (e.stack || e.message)); } }
+  _mount() {
+    this.E1 = 'cubic-bezier(0.215, 0.61, 0.355, 1)';
+    this.E2 = 'cubic-bezier(0.19, 1, 0.22, 1)';
+    this.rm = matchMedia('(prefers-reduced-motion: reduce)').matches || this.props.animaciones === false;
+    this.mq = matchMedia('(max-width: 1180px)');
+    this.onMq = () => this.setState({ isMobile: this.mq.matches });
+    this.mq.addEventListener('change', this.onMq);
+    this.setState({ disp: this.calc(this.state.amount, this.days()), isMobile: this.mq.matches });
+    this.step = -1; this.mx = 0; this.my = 0; this.tmx = 0; this.tmy = 0;
+    this.cm = new WeakMap(); this.gx = 0; this.gy = 0;
+    this.gio = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; const el = e.target; this.gio.unobserve(el); el.animate([{ opacity: 0, transform: 'scale(.9)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 1200, easing: 'cubic-bezier(0.215, 0.61, 0.355, 1)' }); el.style.opacity = ''; }), { threshold: .15 });
+    this.io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { this.io.unobserve(e.target); this.reveal(e.target); } }), { rootMargin: '0px 0px -80px 0px' });
+    this.onScroll = () => { if (!this.sq) { this.sq = true; requestAnimationFrame(() => { this.sq = false; this.safe(() => this.scrollFx()); }); } };
+    addEventListener('scroll', this.onScroll, { passive: true });
+    addEventListener('resize', this.onScroll);
+    this.onMove = e => { this.tmx = e.clientX / innerWidth * 2 - 1; this.tmy = e.clientY / innerHeight * 2 - 1; };
+    addEventListener('mousemove', this.onMove);
+    this.initSmooth();
+    this.rootRef = this.rootRef || React.createRef();
+    const boot = (n = 0) => { if (!(this.rootRef.current) && n < 60) return requestAnimationFrame(() => boot(n + 1)); this.safe(() => this.setup()); this.safe(() => this.intro()); this.safe(() => this.scrollFx()); };
+    setTimeout(() => boot(), 50);
+    const loop = t => { this.raf = requestAnimationFrame(loop); try { this.frame(t); } catch (e) { if (!this.fe) { this.fe = 1; console.error('Kullyn frame:', e && (e.stack || e.message)); } } };
+    this.raf = requestAnimationFrame(loop);
+  }
+
+  componentWillUnmount() {
+    cancelAnimationFrame(this.raf); cancelAnimationFrame(this.tw);
+    removeEventListener('scroll', this.onScroll); removeEventListener('resize', this.onScroll);
+    removeEventListener('mousemove', this.onMove);
+    if (this.onWheel) removeEventListener('wheel', this.onWheel);
+    this.mq.removeEventListener('change', this.onMq); this.io.disconnect(); if (this.gio) this.gio.disconnect();
+  }
+
+  componentDidUpdate(pp, ps) {
+    const s = this.state;
+    if (ps.amount !== s.amount || ps.plazoIdx !== s.plazoIdx || ps.otro !== s.otro || pp.tasa !== this.props.tasa) this.tween(this.calc(s.amount, this.days()));
+    if (ps.isMobile !== s.isMobile || ps.form !== s.form || ps.menu !== s.menu || pp.showCursors !== this.props.showCursors) setTimeout(() => { this.safe(() => { this.setup(); this.step = -1; this.scrollFx(); }); }, 30);
+  }
+
+  tween(to) {
+    const from = { ...(this.state.disp || to) }; const t0 = performance.now(); const D = this.rm ? 1 : 650;
+    cancelAnimationFrame(this.tw);
+    const st = t => {
+      const k = Math.min(1, (t - t0) / D), e = 1 - Math.pow(1 - k, 3); const d = {};
+      for (const key in to) d[key] = from[key] + (to[key] - from[key]) * e;
+      this.setState({ disp: d });
+      if (k < 1) this.tw = requestAnimationFrame(st);
+    };
+    this.tw = requestAnimationFrame(st);
+  }
+
+  setup() {
+    const $$ = s => [...this.R().querySelectorAll(s)];
+    if (!this.grain) {
+      const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .6 0'/></filter><rect width='100%' height='100%' filter='url(#n)'/></svg>";
+      this.grain = `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+    }
+    if (!this.grainD) {
+      const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .7 0'/></filter><rect width='100%' height='100%' filter='url(#n)'/></svg>";
+      this.grainD = `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+    }
+    $$('[data-grain]').forEach(el => { if (!el.dataset.gi) { el.dataset.gi = 1; el.style.backgroundImage = el.dataset.grain === 'dark' ? this.grainD : this.grain; } });
+    this.setupGlows($$);
+
+    $$('[data-btn]').forEach(b => {
+      if (b.dataset.bi) return; b.dataset.bi = 1;
+      const l = b.querySelector('[data-lbl]');
+      if (l) {
+        const words = l.textContent.trim().split(/\s+/);
+        l.innerHTML = words.map(w => `<span style="display:inline-block;overflow:hidden;vertical-align:top;line-height:1.25"><span data-w style="display:inline-block">${w}</span></span>`).join('<span style="display:inline-block;width:.26em"></span>');
+      }
+      const bg = b.querySelector('[data-bg]'), arw = b.querySelector('[data-arw]');
+      b.addEventListener('pointerenter', () => {
+        if (this.rm) return;
+        b.querySelectorAll('[data-w]').forEach((w, i) => w.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-110%)', offset: .5 }, { transform: 'translateY(110%)', offset: .5001 }, { transform: 'translateY(0)' }], { duration: 600, delay: i * 100, easing: this.E1 }));
+        if (bg) bg.animate([{ clipPath: 'inset(100% 0 0 0)' }, { clipPath: 'inset(0 0 0 0)' }], { duration: 450, easing: this.E1, fill: 'forwards' });
+        if (arw) this.slideArrow(arw);
+      });
+      b.addEventListener('pointerleave', () => { if (bg && !this.rm) bg.animate([{ clipPath: 'inset(0 0 0 0)' }, { clipPath: 'inset(0 0 100% 0)' }], { duration: 450, easing: this.E1, fill: 'forwards' }); });
+    });
+
+    $$('[data-words]').forEach(p => {
+      if (p.dataset.wi) return; p.dataset.wi = 1;
+      p.innerHTML = p.textContent.trim().split(/\s+/).map(w => `<span data-wd style="opacity:.16;transition:opacity .25s">${w}</span>`).join(' ');
+    });
+
+    $$('[data-r]').forEach(el => {
+      if (el.dataset.ri) return; el.dataset.ri = 1;
+      if (el.dataset.r === 'line') el.style.transform = 'scaleX(0)'; else el.style.opacity = '0';
+      this.io.observe(el);
+    });
+    clearTimeout(this.fb); this.fb = setTimeout(() => this.R().querySelectorAll('[data-r]').forEach(el => { if (el.dataset.r === 'line') { if (el.style.transform === 'scaleX(0)') el.style.transform = 'scaleX(1)'; } else if (el.style.opacity === '0' && el.getBoundingClientRect().top < innerHeight) { this.io.unobserve(el); this.reveal(el); } }), 3000);
+
+    $$('[data-mtrack]').forEach(t => {
+      if (t.dataset.mi || this.rm) return; t.dataset.mi = 1;
+      const a = t.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-50%)' }], { duration: 144000, iterations: Infinity });
+      t.addEventListener('pointerenter', () => a.pause()); t.addEventListener('pointerleave', () => a.play());
+    });
+
+    if (!this.rm) {
+      $$('[data-dash]').forEach(p => { if (p.dataset.di) return; p.dataset.di = 1; p.animate([{ strokeDashoffset: 0 }, { strokeDashoffset: -16 }], { duration: 1000, iterations: Infinity }); });
+      $$('[data-pulse]').forEach(p => { if (p.dataset.pi) return; p.dataset.pi = 1; p.animate([{ transform: 'scale(1)', opacity: .8 }, { transform: 'scale(3.4)', opacity: 0 }], { duration: 1800, iterations: Infinity, easing: this.E1 }); });
+    }
+
+    $$('[data-card]').forEach(c => {
+      if (c.dataset.ci) return; c.dataset.ci = 1;
+      const ic = c.querySelector('[data-ico]');
+      const bg0 = ic ? ic.style.background : '', co0 = ic ? ic.style.color : '', sh0 = c.style.boxShadow;
+      const hb = c.querySelector('[data-hborder]'), wf = c.querySelector('[data-wf]'), wf0 = wf ? wf.style.color : '';
+      c.addEventListener('pointerenter', () => { c.style.transform = 'translateY(-4px)'; c.style.boxShadow = '0 14px 40px rgba(16,24,32,.07)'; if (hb) hb.style.opacity = '1'; if (wf) wf.style.color = 'rgba(22,20,18,.24)'; if (ic) { ic.style.background = '#EC6C2D'; ic.style.color = '#fff'; } });
+      c.addEventListener('pointerleave', () => { c.style.transform = 'translateY(0)'; c.style.boxShadow = sh0; if (hb) hb.style.opacity = '0'; if (wf) wf.style.color = wf0; if (ic) { ic.style.background = bg0; ic.style.color = co0; } });
+    });
+
+    this.floats = $$('[data-float]');
+    this.cursors = $$('[data-cursor]');
+    if (this.rm) this.cursors.forEach(el => { const P = el.offsetParent; if (!P) return; const [x, y] = el.dataset.cursor.split(';')[0].split(',').map(Number); el.style.transform = `translate(${x * P.clientWidth}px, ${y * P.clientHeight}px)`; });
+  }
+
+  setupGlows($$) {
+    const mob = this.state.isMobile, rm = this.rm, E = 'ease-in-out';
+    $$('[data-gblur]').forEach(el => { el.style.filter = `blur(${Math.round(+el.dataset.gblur * (mob ? .45 : 1))}px)`; });
+    this.gpar = $$('[data-gpar]'); this.gpy = $$('[data-gpy]'); this.gint = $$('[data-gint]'); this.gbr = $$('[data-gbridge]');
+    if (rm) return;
+    const once = (sel, key, fn) => $$(sel).forEach(el => { if (el.dataset[key]) return; el.dataset[key] = 1; fn(el); });
+    if (!mob) {
+    once('[data-gbreathe]', 'gbi', el => el.animate([{ transform: 'translate(-50%,-50%) scale(1)', opacity: 1 }, { transform: 'translate(-50%,-50%) scale(1.08)', opacity: .85 }], { duration: 9000, direction: 'alternate', iterations: Infinity, easing: E }));
+    once('[data-gfloat]', 'gfi', el => el.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-16px)' }], { duration: 7000, direction: 'alternate', iterations: Infinity, easing: E }));
+    once('[data-grot]', 'gri', el => el.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: +el.dataset.grot || 50000, iterations: Infinity }));
+    once('[data-gdrift]', 'gdi', el => el.animate(el.dataset.gdrift.split(';').map(p => { const [x, y] = p.split(',').map(Number); return { transform: `translate3d(${x}px,${y}px,0)` }; }), { duration: +el.dataset.gdur || 24000, iterations: Infinity, easing: E, delay: -Math.random() * 10000 }));
+    once('[data-gpulse]', 'gpi', el => el.animate([{ opacity: 1 }, { opacity: .7 }], { duration: +el.dataset.gpulse || 8000, direction: 'alternate', iterations: Infinity, easing: E }));
+    }
+    once('[data-genter]', 'gei', el => { el.style.opacity = '0'; this.gio.observe(el); });
+    once('[data-pq]', 'wp', c => {
+      c.querySelectorAll('[data-wl]').forEach(p => { try { const L = Math.ceil(p.getTotalLength()) + 1; p._len = L; p.style.strokeDasharray = L; p.style.strokeDashoffset = L; } catch (e) {} });
+      c.querySelectorAll('[data-wg]').forEach(g => { g.style.opacity = 0; });
+      c.querySelectorAll('[data-wd]').forEach(d => { d.style.transformBox = 'fill-box'; d.style.transformOrigin = 'center'; d.style.transform = 'scale(0)'; });
+    });
+  }
+
+  drawWire(c, delay) {
+    if (this.rm || c.dataset.wdr) return; c.dataset.wdr = 1;
+    c.querySelectorAll('[data-wl]').forEach(p => { if (p._len) p.animate([{ strokeDashoffset: p._len }, { strokeDashoffset: 0 }], { duration: 1200, delay: delay + 200, easing: this.E1, fill: 'forwards' }); });
+    c.querySelectorAll('[data-wg]').forEach(g => g.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 900, delay: delay + 200, easing: this.E1, fill: 'forwards' }));
+    const end = delay + 1300;
+    c.querySelectorAll('[data-wd]').forEach((d, i) => {
+      d.animate([{ transform: 'scale(0)' }, { transform: 'scale(1.4)', offset: .6 }, { transform: 'scale(1)' }], { duration: 450, delay: end + i * 140, easing: this.E1, fill: 'forwards' });
+      d.animate([{ opacity: 1 }, { opacity: .45 }], { duration: 1400, delay: end + 700 + i * 300, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+    });
+    setTimeout(() => { c.querySelectorAll('[data-wtravel]').forEach(t => { t._t0 = performance.now(); }); this.travel = [...this.R().querySelectorAll('[data-wtravel]')].filter(t => t._t0); }, end + 500);
+  }
+
+  slideArrow(a) {
+    a.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(105%)', offset: .5 }, { transform: 'translateX(-105%)', offset: .5001 }, { transform: 'translateX(0)' }], { duration: 600, easing: this.E1 });
+  }
+
+  intro() {
+    const $$ = s => [...this.R().querySelectorAll(s)];
+    const rm = this.rm;
+    $$('[data-hl]').forEach((el, i) => el.animate(rm ? [{ opacity: 0 }, { opacity: 1 }] : [{ transform: 'translateY(105%)' }, { transform: 'translateY(0)' }], { duration: 800, delay: 150 + i * 120, easing: this.E2, fill: 'backwards' }));
+    $$('[data-hs]').forEach((el, i) => el.animate([{ opacity: 0, transform: rm ? 'none' : 'translateY(24px)' }, { opacity: 1, transform: 'none' }], { duration: 700, delay: i === 0 ? 50 : 550 + i * 100, easing: this.E1, fill: 'backwards' }));
+    $$('[data-hsim]').forEach(el => el.animate([{ opacity: 0, transform: rm ? 'none' : 'translateY(40px) scale(.96)' }, { opacity: 1, transform: 'none' }], { duration: 1100, delay: 300, easing: this.E2, fill: 'backwards' }));
+    $$('[data-hmini]').forEach((el, i) => el.animate([{ opacity: 0, transform: rm ? 'none' : 'translateY(20px) scale(.94)' }, { opacity: 1, transform: 'none' }], { duration: 800, delay: 900 + i * 160, easing: this.E2, fill: 'backwards' }));
+  }
+
+  reveal(el) {
+    if (el.dataset.r === 'line') {
+      el.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: this.rm ? 1 : 700, delay: 350, easing: this.E1, fill: 'forwards' });
+      return;
+    }
+    const sib = [...el.parentElement.children].filter(c => c.hasAttribute('data-r') && c.dataset.r !== 'line');
+    const pq = el.hasAttribute('data-pq');
+    const delay = Math.max(0, sib.indexOf(el)) * (pq ? 120 : 90) + (+el.dataset.d || 0);
+    el.style.opacity = '';
+    if (pq && !this.rm) { el.animate([{ opacity: 0, transform: 'translateY(40px)' }, { opacity: 1, transform: 'none' }], { duration: 1000, delay, easing: this.E2, fill: 'backwards' }); this.drawWire(el, delay); return; }
+    const g = el.hasAttribute('data-glass');
+    el.animate(this.rm ? [{ opacity: 0 }, { opacity: 1 }] : g ? [{ opacity: 0, transform: 'translateY(30px) scale(.98)' }, { opacity: 1, transform: 'none' }] : [{ opacity: 0, transform: 'translateY(32px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: g ? 800 : 600, delay, easing: g ? this.E2 : this.E1, fill: 'backwards' });
+  }
+
+  frame(t) {
+    if (this.rm) return;
+    this.mx += (this.tmx - this.mx) * .05; this.my += (this.tmy - this.my) * .05;
+    const s = t / 1000;
+    this.gx += (this.tmx - this.gx) * .025; this.gy += (this.tmy - this.gy) * .025;
+    if (!this.state.isMobile) (this.gpar || []).forEach(el => { const d = +el.dataset.gpar || 20; el.style.transform = `translate3d(${(this.gx * d).toFixed(2)}px, ${(this.gy * d).toFixed(2)}px, 0)`; });
+    (this.travel || []).forEach(tr => {
+      const p = tr._p || (tr._p = this.R().querySelector('#' + tr.dataset.path)); if (!p || !p._len) return;
+      const k = ((t - tr._t0) / 5200) % 1, e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+      const pt = p.getPointAtLength(Math.max(0, e) * (p._len - 1));
+      tr.setAttribute('cx', pt.x.toFixed(1)); tr.setAttribute('cy', pt.y.toFixed(1)); tr.style.opacity = (Math.sin(k * Math.PI) * .9).toFixed(2);
+    });
+    (this.floats || []).forEach(el => {
+      const [a, ph, dp] = (el.dataset.float || '6 0 10').split(' ').map(Number);
+      el.style.transform = `translate3d(${(this.mx * dp).toFixed(2)}px, ${(Math.sin(s * 0.9 + ph) * a + this.my * dp).toFixed(2)}px, 0)`;
+    });
+    (this.cursors || []).forEach(el => {
+      const P = el.offsetParent; if (!P) return;
+      let c = this.cm.get(el);
+      if (!c) { c = { pts: el.dataset.cursor.split(';').map(p => p.split(',').map(Number)), i: 0, t0: t, clicked: false }; this.cm.set(el, c); }
+      const MOVE = 1500, HOLD = 1100, dt = t - c.t0;
+      const a = c.pts[c.i], b = c.pts[(c.i + 1) % c.pts.length];
+      const k = Math.min(1, dt / MOVE), e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+      const x = (a[0] + (b[0] - a[0]) * e) * P.clientWidth, y = (a[1] + (b[1] - a[1]) * e) * P.clientHeight;
+      el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+      if (k >= 1 && !c.clicked) {
+        c.clicked = true;
+        const ar = el.querySelector('[data-carrow]'); if (ar) ar.animate([{ transform: 'scale(1)' }, { transform: 'scale(.8)' }, { transform: 'scale(1)' }], { duration: 300, easing: this.E1 });
+        const rp = el.querySelector('[data-ripple]'); if (rp) rp.animate([{ transform: 'scale(.2)', opacity: .8 }, { transform: 'scale(1.7)', opacity: 0 }], { duration: 650, easing: this.E1 });
+      }
+      if (dt > MOVE + HOLD) { c.i = (c.i + 1) % c.pts.length; c.t0 = t; c.clicked = false; }
+    });
+  }
+
+  scrollFx() {
+    const vh = innerHeight;
+    const hero = this.R().querySelector('#top');
+    if (hero) { const lt = hero.getBoundingClientRect().bottom <= 71; if (lt !== !!this.state.hdrLight) this.setState({ hdrLight: lt }); }
+    const top = scrollY < 12; if (top !== !!this.state.hdrTop) this.setState({ hdrTop: top });
+    if (!this.rm) {
+      if (!this.state.isMobile) (this.gpy || []).forEach(el => { const sec = el.closest('section'); if (!sec) return; const r = sec.getBoundingClientRect(); el.style.transform = `translate3d(0, ${(-(r.top + r.height / 2 - vh / 2) * .12).toFixed(1)}px, 0)`; });
+      (this.gint || []).forEach(el => { const sec = el.closest('section'); if (!sec) return; const r = sec.getBoundingClientRect(); const c = Math.abs(r.top + r.height / 2 - vh / 2) / vh; el.style.opacity = (.45 + .55 * Math.max(0, 1 - c)).toFixed(3); });
+      const ct = this.R().querySelector('#contacto');
+      if (ct && this.gbr) { const p = Math.min(1, Math.max(0, (vh - ct.getBoundingClientRect().top) / (vh * .9))); this.gbr.forEach(el => { el.style.opacity = (el.dataset.gbridge === 'dark' ? p : 1 - p * .9).toFixed(3); }); }
+    }
+    let act = '';
+    ['que', 'como', 'porque', 'preguntas', 'contacto'].forEach(id => { const el = this.R().querySelector('#' + id); if (el && el.getBoundingClientRect().top < vh * 0.4) act = id; });
+    if (act !== this.navAct) {
+      this.navAct = act;
+      this.R().querySelectorAll('[data-nav]').forEach(a => { const on = a.dataset.nav === act; a.style.opacity = on ? '1' : '.7'; const d = a.querySelector('[data-dot]'); if (d) d.style.opacity = on ? '1' : '0'; });
+    }
+    this.R().querySelectorAll('[data-words]').forEach(p => {
+      const r = p.getBoundingClientRect(); const k = Math.min(1, Math.max(0, (vh * 0.9 - r.top) / (vh * 0.5)));
+      const ws = p.querySelectorAll('[data-wd]'); const n = Math.round(k * ws.length);
+      if (p._n !== n) { p._n = n; ws.forEach((w, i) => { w.style.opacity = i < n ? '1' : '.16'; }); }
+    });
+    const wrap = this.R().querySelector('[data-steps]');
+    if (wrap) {
+      const r = wrap.getBoundingClientRect(); const tot = Math.max(1, r.height - (vh - 70));
+      const p = Math.min(1, Math.max(0, (70 - r.top) / tot)) * 4;
+      const a = Math.min(3, Math.floor(p)), fr = Math.min(1, p - a);
+      this.R().querySelectorAll('[data-tabfill]').forEach((f, i) => { f.style.width = (i < a ? 100 : i === a ? fr * 100 : 0) + '%'; });
+      this.R().querySelectorAll('[data-tab]').forEach((tb, i) => { tb.style.color = i === a ? '#161412' : 'rgba(22,20,18,.5)'; });
+      if (a !== this.step) this.showStep(a);
+    }
+  }
+
+  showStep(i) {
+    const first = this.step === -1; this.step = i;
+    const set = els => els.forEach((el, j) => {
+      const on = j === i;
+      el.style.transition = first ? 'none' : `opacity .5s ${this.E1}, transform .6s ${this.E1}`;
+      el.style.opacity = on ? '1' : '0';
+      el.style.transform = on || this.rm ? 'translateY(0)' : `translateY(${j < i ? -16 : 16}px)`;
+      el.style.pointerEvents = on ? 'auto' : 'none';
+    });
+    set([...this.R().querySelectorAll('[data-stxt]')]);
+    const mocks = [...this.R().querySelectorAll('[data-smock]')]; set(mocks);
+    const m = mocks[i];
+    if (m && !first) m.querySelectorAll('[data-mi]').forEach((el, k) => el.animate([{ opacity: 0, transform: this.rm ? 'none' : 'translateY(18px)' }, { opacity: 1, transform: 'none' }], { duration: 600, delay: 120 + k * 90, easing: this.E1, fill: 'backwards' }));
+  }
+
+  initSmooth() {
+    if (this.rm || matchMedia('(pointer: coarse)').matches) return;
+    this.sy = scrollY; this.ty = scrollY; this.running = false;
+    this.onWheel = e => {
+      if (e.ctrlKey || this.state.menu) return;
+      e.preventDefault();
+      let d = e.deltaY; if (e.deltaMode === 1) d *= 32; else if (e.deltaMode === 2) d *= innerHeight;
+      if (!this.running) { this.sy = scrollY; this.ty = scrollY; }
+      this.ty = Math.max(0, Math.min(document.documentElement.scrollHeight - innerHeight, this.ty + d));
+      this.run(0.075);
+    };
+    addEventListener('wheel', this.onWheel, { passive: false });
+  }
+
+  run(l) {
+    this.lerp = l; if (this.running) return; this.running = true;
+    const st = () => {
+      this.sy += (this.ty - this.sy) * this.lerp;
+      if (Math.abs(this.ty - this.sy) < 0.5) { this.sy = this.ty; this.running = false; }
+      window.scrollTo({ top: this.sy, behavior: 'instant' });
+      if (this.running) requestAnimationFrame(st);
+    };
+    requestAnimationFrame(st);
+  }
+
+  scrollToY(y) {
+    y = Math.max(0, y);
+    if (this.onWheel) { if (!this.running) this.sy = scrollY; this.ty = y; this.run(0.075); }
+    else window.scrollTo({ top: y, behavior: this.rm ? 'auto' : 'smooth' });
+  }
+
+  goTo(id) {
+    const el = id ? this.R().querySelector('#' + id) : null;
+    this.scrollToY(el ? el.getBoundingClientRect().top + scrollY - 70 : 0);
+  }
+
+  goStep(i) {
+    const w = this.R().querySelector('[data-steps]'); if (!w) return;
+    const top = w.getBoundingClientRect().top + scrollY; const tot = w.offsetHeight - (innerHeight - 70);
+    this.scrollToY(top - 70 + tot * (i / 4) + 4);
+  }
+
+  renderVals() {
+    this.rootRef = this.rootRef || React.createRef();
+    this.csRef = this.csRef || React.createRef();
+    const csGo = i => () => { const el = this.csRef.current; if (!el || !el.children[i]) return; el.scrollTo({ left: el.children[i].offsetLeft - el.children[0].offsetLeft, behavior: this.rm ? 'auto' : 'smooth' }); };
+    const s = this.state; const d = s.disp || this.calc(s.amount, this.days());
+    const f = n => '$' + Math.round(n).toLocaleString('es-CL');
+    const go = id => e => { if (e) e.preventDefault(); if (this.state.menu) this.setState({ menu: false }); this.goTo(id); };
+    const W = 320, H = 96;
+    const sc = 0.4 + 0.6 * Math.min(1, d.amount / 20000000);
+    const yT = H - 4 - (H - 12) * sc;
+    const yH = H - 4 - (H - 12) * sc * (d.amount ? d.hoy / d.amount : 0);
+    const xE = Math.max(80, Math.min(W - 20, (d.days / 120) * (W - 20)));
+    const line = `M0 ${H} C 16 ${H}, 20 ${yH.toFixed(1)}, 46 ${yH.toFixed(1)} L ${(xE - 28).toFixed(1)} ${yH.toFixed(1)} C ${(xE - 12).toFixed(1)} ${yH.toFixed(1)}, ${(xE - 14).toFixed(1)} ${yT.toFixed(1)}, ${xE.toFixed(1)} ${yT.toFixed(1)} L ${W} ${yT.toFixed(1)}`;
+    const faq = i => e => {
+      const c = e.currentTarget.querySelector('[data-chev]');
+      if (c && !this.rm) c.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(130%)', offset: .5 }, { transform: 'translateY(-130%)', offset: .5001 }, { transform: 'translateY(0)' }], { duration: 500, easing: this.E1 });
+      this.setState(st => ({ faq: st.faq === i ? -1 : i }));
+    };
+    const plazo = i => () => this.setState({ plazoIdx: i });
+    const mob = s.isMobile;
+    return {
+      rootRef: this.rootRef, isMobile: mob, isDesktop: !mob, menu: s.menu,
+      openMenu: () => this.setState({ menu: true }), closeMenu: () => this.setState({ menu: false }),
+      goTop: go(null), goQue: go('que'), goComo: go('como'), goPorque: go('porque'), goFaq: go('preguntas'), goContacto: go('contacto'),
+      simOrder: mob ? 2 : 1, textOrder: mob ? 1 : 2, simPad: mob ? '0' : '24px 0', btnW: mob ? '100%' : 'auto',
+      showCursors: this.props.showCursors ?? true,
+      ftCols: mob ? 'repeat(auto-fit,minmax(min(100%,180px),1fr))' : 'minmax(0,2fr) repeat(3,minmax(0,1fr))', ftBrand: mob ? '1 / -1' : 'auto',
+      hdrBg: s.hdrLight ? 'rgba(255,255,255,.92)' : s.hdrTop ? 'rgba(22,20,18,.06)' : 'rgba(22,20,18,.84)', hdrBd: s.hdrLight ? 'rgba(22,20,18,.08)' : s.hdrTop ? 'rgba(255,255,255,0)' : 'rgba(255,255,255,.06)', hdrBlur: s.hdrTop && !s.hdrLight ? 'blur(4px)' : 'blur(14px)', hdrBd2: s.hdrLight ? 'rgba(22,20,18,.16)' : 'rgba(255,255,255,.16)',
+      hdrFg: s.hdrLight ? '#161412' : '#fff', ingBg: s.hdrLight ? '#161412' : '#fff', ingFg: s.hdrLight ? '#fff' : '#161412', ingHv: s.hdrLight ? '#2A2624' : '#FDEFE6',
+      pqCols: mob ? 'repeat(auto-fit,minmax(min(100%,max(280px,calc(50% - 10px))),1fr))' : 'repeat(4,minmax(0,1fr))',
+      pqH1: mob ? '380px' : '420px', pqH: mob ? '380px' : '420px', pqIll: mob ? '40%' : '46%',
+      amountStr: s.amount ? s.amount.toLocaleString('es-CL') : '',
+      onAmount: e => this.setState({ amount: parseInt((e.target.value.replace(/\D/g, '').slice(0, 12)) || '0', 10) }),
+      pillLeft: `calc(4px + (100% - 8px) * ${s.plazoIdx / 4})`,
+      pc0: s.plazoIdx === 0 ? '#161412' : '#fff', pc1: s.plazoIdx === 1 ? '#161412' : '#fff', pc2: s.plazoIdx === 2 ? '#161412' : '#fff', pc3: s.plazoIdx === 3 ? '#161412' : '#fff',
+      o0: s.plazoIdx === 0 ? 1 : .6, o1: s.plazoIdx === 1 ? 1 : .6, o2: s.plazoIdx === 2 ? 1 : .6, o3: s.plazoIdx === 3 ? 1 : .6,
+      p0: plazo(0), p1: plazo(1), p2: plazo(2), p3: plazo(3),
+      isOtro: s.plazoIdx === 3, otroStr: String(s.otro || ''),
+      onOtro: e => this.setState({ otro: Math.min(365, parseInt(e.target.value.replace(/\D/g, '') || '0', 10)) }),
+      hoyStr: f(d.hoy), plazoStr: f(d.plazo), costoStr: f(d.costo), daysLbl: `Día ${Math.round(d.days)}`,
+      tasaStr: this.tasa().toFixed(2).replace('.', ',') + '% mensual',
+      chartLine: line, chartArea: `${line} L ${W} ${H} L 0 ${H} Z`,
+      toggleRate: () => this.setState({ rateOpen: !s.rateOpen }),
+      rateRows: s.rateOpen ? '1fr' : '0fr', rateRot: s.rateOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+      s0: () => this.goStep(0), s1: () => this.goStep(1), s2: () => this.goStep(2), s3: () => this.goStep(3),
+      tf0: faq(0), tf1: faq(1), tf2: faq(2), tf3: faq(3),
+      fBg0: s.faq === 0 ? 'rgb(16,24,32)' : 'transparent', fBg1: s.faq === 1 ? 'rgb(16,24,32)' : 'transparent', fBg2: s.faq === 2 ? 'rgb(16,24,32)' : 'transparent', fBg3: s.faq === 3 ? 'rgb(16,24,32)' : 'transparent',
+      fFg0: s.faq === 0 ? '#fff' : 'rgb(16,24,32)', fFg1: s.faq === 1 ? '#fff' : 'rgb(16,24,32)', fFg2: s.faq === 2 ? '#fff' : 'rgb(16,24,32)', fFg3: s.faq === 3 ? '#fff' : 'rgb(16,24,32)',
+      fRows0: s.faq === 0 ? '1fr' : '0fr', fRows1: s.faq === 1 ? '1fr' : '0fr', fRows2: s.faq === 2 ? '1fr' : '0fr', fRows3: s.faq === 3 ? '1fr' : '0fr',
+      fRot0: s.faq === 0 ? 'rotate(90deg) scaleY(0)' : 'rotate(0deg)', fRot1: s.faq === 1 ? 'rotate(90deg) scaleY(0)' : 'rotate(0deg)', fRot2: s.faq === 2 ? 'rotate(90deg) scaleY(0)' : 'rotate(0deg)', fRot3: s.faq === 3 ? 'rotate(90deg) scaleY(0)' : 'rotate(0deg)',
+      onSubmit: e => { e.preventDefault(); if (this.state.form !== 'idle') return; this.setState({ form: 'loading' }); setTimeout(() => this.setState({ form: 'sent' }), 1500); },
+      mSel0: () => this.setState({ monto: 0 }), mSel1: () => this.setState({ monto: 1 }), mSel2: () => this.setState({ monto: 2 }), mSel3: () => this.setState({ monto: 3 }),
+      mBg0: s.monto === 0 ? '#fff' : 'transparent', mBg1: s.monto === 1 ? '#fff' : 'transparent', mBg2: s.monto === 2 ? '#fff' : 'transparent', mBg3: s.monto === 3 ? '#fff' : 'transparent',
+      mFg0: s.monto === 0 ? 'rgb(16,24,32)' : '#fff', mFg1: s.monto === 1 ? 'rgb(16,24,32)' : '#fff', mFg2: s.monto === 2 ? 'rgb(16,24,32)' : '#fff', mFg3: s.monto === 3 ? 'rgb(16,24,32)' : '#fff',
+      onCarousel: e => { const el = e.currentTarget, c = el.children[0]; if (!c) return; const i = Math.max(0, Math.min(3, Math.round(el.scrollLeft / (c.offsetWidth + 14)))); if (i !== this.state.cs) this.setState({ cs: i }); },
+      csGo0: csGo(0), csGo1: csGo(1), csGo2: csGo(2), csGo3: csGo(3),
+      csW0: s.cs === 0 ? '24px' : '6px', csW1: s.cs === 1 ? '24px' : '6px', csW2: s.cs === 2 ? '24px' : '6px', csW3: s.cs === 3 ? '24px' : '6px',
+      csC0: s.cs === 0 ? '#EC6C2D' : 'rgba(22,20,18,.18)', csC1: s.cs === 1 ? '#EC6C2D' : 'rgba(22,20,18,.18)', csC2: s.cs === 2 ? '#EC6C2D' : 'rgba(22,20,18,.18)', csC3: s.cs === 3 ? '#EC6C2D' : 'rgba(22,20,18,.18)',
+      notSent: s.form !== 'sent', isSent: s.form === 'sent', isLoading: s.form === 'loading', btnLblOp: s.form === 'loading' ? 0 : 1,
+      spinner: React.createElement('span', { style: { width: 18, height: 18, border: '2px solid rgba(16,24,32,.25)', borderTopColor: 'rgb(16,24,32)', borderRadius: '50%', display: 'inline-block', animation: 'kspin .7s linear infinite' } })
+    };
+  }
+}
+
+</script>
+</body>
+</html>
